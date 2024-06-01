@@ -31,6 +31,13 @@
 
     <script src="assets/font_data/NeueHaasGroteskDisplayPro_data_arr.js"></script>
     
+    <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Text Pro 55 Roman_data.js"></script>
+    <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Text Pro 56 Italic_data.js"></script>
+    <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Text Pro 65 Medium_data.js"></script>
+    <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Text Pro 66 Medium Italic_data.js"></script>
+    <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Text Pro 75 Bold_data.js"></script>
+    <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Text Pro 76 Bold Italic_data.js"></script>
+    
     <script>
 
 
@@ -44,6 +51,17 @@
 
 
 
+        let font_con_test = [
+            Neue_Haas_Grotesk_Text_Pro_55_Roman, 
+            Neue_Haas_Grotesk_Text_Pro_56_Italic, 
+            Neue_Haas_Grotesk_Text_Pro_65_Medium, 
+            Neue_Haas_Grotesk_Text_Pro_66_Medium_Italic,
+            Neue_Haas_Grotesk_Text_Pro_75_Bold, 
+            Neue_Haas_Grotesk_Text_Pro_76_Bold_Italic,
+        ];
+
+
+        
 
         let typeface = [];
         
@@ -57,7 +75,7 @@
         typeface.push(NeueHaasGroteskDisplayPro_Arr[14]);
 
 
-        
+
         function Letter_canvas(typeface, letter, assets){
 
             let defaults = {
