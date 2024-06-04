@@ -27,13 +27,23 @@
 
     <canvas id="canvas" width="1000" height="1000"></canvas>
     
-    <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Text Pro 55 Roman_data.js"></script>
-    <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Text Pro 56 Italic_data.js"></script>
-    <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Text Pro 65 Medium_data.js"></script>
-    <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Text Pro 66 Medium Italic_data.js"></script>
-    <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Text Pro 75 Bold_data.js"></script>
-    <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Text Pro 76 Bold Italic_data.js"></script>
     
+    <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 15 XXThin_data.js"></script>
+    <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 16 XXThin Italic_data.js"></script>
+    <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 25 XThin_data.js"></script>
+    <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 26 XThin Italic_data.js"></script>
+    <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 35 Thin_data.js"></script>
+    <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 36 Thin Italic_data.js"></script>
+    <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 45 Light_data.js"></script>
+    <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 46 Light Italic_data.js"></script>
+    <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 55 Roman_data.js"></script>
+    <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 56 Roman Italic_data.js"></script>
+    <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 65 Medium_data.js"></script>
+    <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 66 Medium Italic_data.js"></script>
+    <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 75 Bold_data.js"></script>
+    <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 76 Bold Italic_data.js"></script>
+    <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 95 Black_data.js"></script>
+    <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 96 Black Italic_data.js"></script>
     <script>
 
 
@@ -123,7 +133,7 @@
             }
 
 
-
+            
             let structure_con = [];
             let structure_max_con = [];
             let structure_min_con;
@@ -306,14 +316,22 @@
 
                 }
 
-console.log(typeface_path_con[0][0][0][0])
-
+console.log(typeface_path_con)
+// console.log(letter_path_con)
                 // ---------------------------------------------------------------------------------------------------------------------------------- //
 
 
                 for(let i = 0; i < letter_path_con.length; i++){
                     for(let j = 0; j < letter_path_con[i].length; j++){
                         for(let k = 0; k < letter_path_con[i][j].length; k++){
+
+                            if (!typeface_path_con[i] || !typeface_path_con[i][0] || !typeface_path_con[i][0][j] || !typeface_path_con[i][0][j][k]) {
+                                console.error('Undefined value at: ', i, j, k, typeface_path_con[i]);
+                                console.error('Undefined value at: ', i, j, k, typeface_path_con[i][j]);
+                                console.error('Undefined value at: ', i, j, k, typeface_path_con[i][j][k]);
+                                // continue;
+                            }
+
                             letter_path_con[i][j][k].x = typeface_path_con[i][0][j][k].x + ((typeface_path_con[i][1][j][k].x - typeface_path_con[i][0][j][k].x) * weight_con[i]);
                             letter_path_con[i][j][k].y = typeface_path_con[i][0][j][k].y + ((typeface_path_con[i][1][j][k].y - typeface_path_con[i][0][j][k].y) * weight_con[i]);
                             letter_path_con[i][j][k].in_x = typeface_path_con[i][0][j][k].in_x + ((typeface_path_con[i][1][j][k].in_x - typeface_path_con[i][0][j][k].in_x) * weight_con[i]);
@@ -406,9 +424,9 @@ console.log(typeface_path_con[0][0][0][0])
 
 
         // let typeface = [Neue_Haas_Grotesk_Text_Pro_55_Roman]
-        let typeface = [Neue_Haas_Grotesk_Text_Pro_55_Roman, Neue_Haas_Grotesk_Text_Pro_65_Medium]
+        // let typeface = [Neue_Haas_Grotesk_Text_Pro_55_Roman, Neue_Haas_Grotesk_Text_Pro_65_Medium]
+        let typeface = [Neue_Haas_Grotesk_Display_Pro_15_XXThin, Neue_Haas_Grotesk_Display_Pro_95_Black]
         // let typeface = [Neue_Haas_Grotesk_Text_Pro_55_Roman, Neue_Haas_Grotesk_Text_Pro_65_Medium, Neue_Haas_Grotesk_Text_Pro_75_Bold]
-
 
         let letter_a_1 = new VariableFontOnCanvas(typeface, 'Hamburgefonstiv', assets);
 
