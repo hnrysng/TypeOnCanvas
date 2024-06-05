@@ -60,7 +60,7 @@
 
 
 
-        function VariableFontOnCanvas(typeface, letter, assets){
+        function TransitionFontOnCanvas(typeface, letter, assets){
 
             let defaults = {
                 position: { x: 0, y: 0 },
@@ -179,15 +179,17 @@
 
 
             let updated_width_con = [];
-            let scale_con = [];
-            let weight_con = [];
+            // let scale_con = [];
+            // let weight_con = [];
+            // let scale_con = [];
+            // let weight_con = [];
             let letter_pos_con = [];
             let pos_y_align = [];
 
             for(let i = 0; i < letter.length; i++){
                 updated_width_con[i] = 0;
-                scale_con[i] = assets.scale;
-                weight_con[i] = assets.weight;
+                // scale_con[i] = assets.scale;
+                // weight_con[i] = assets.weight;
                 letter_pos_con[i] = {x:0, y:0};
             }
 
@@ -195,7 +197,12 @@
         
 
 
-            this.draw = function(){
+            this.draw = function(updated_weight){
+
+                if(updated_weight == undefined){
+                    updated_weight = assets.weight
+                }
+
 
                 let total_width = sumArray(width_con);
 
@@ -233,24 +240,24 @@
 
                 for(let i = 0; i < structure_con.length; i++){
 
-                    structure_con[i].point_0.x = structure_min_con[i].point_0.x + ((structure_max_con[i].point_0.x - structure_min_con[i].point_0.x) *  weight_con[i]);
-                    structure_con[i].point_0.y = structure_min_con[i].point_0.y + ((structure_max_con[i].point_0.y - structure_min_con[i].point_0.y) *  weight_con[i]);
+                    structure_con[i].point_0.x = structure_min_con[i].point_0.x + ((structure_max_con[i].point_0.x - structure_min_con[i].point_0.x) *  updated_weight);
+                    structure_con[i].point_0.y = structure_min_con[i].point_0.y + ((structure_max_con[i].point_0.y - structure_min_con[i].point_0.y) *  updated_weight);
 
-                    structure_con[i].point_1.x = structure_min_con[i].point_1.x + ((structure_max_con[i].point_1.x - structure_min_con[i].point_1.x) *  weight_con[i]);
-                    structure_con[i].point_1.y = structure_min_con[i].point_1.y + ((structure_max_con[i].point_1.y - structure_min_con[i].point_1.y) *  weight_con[i]);
+                    structure_con[i].point_1.x = structure_min_con[i].point_1.x + ((structure_max_con[i].point_1.x - structure_min_con[i].point_1.x) *  updated_weight);
+                    structure_con[i].point_1.y = structure_min_con[i].point_1.y + ((structure_max_con[i].point_1.y - structure_min_con[i].point_1.y) *  updated_weight);
 
-                    structure_con[i].point_2.x = structure_min_con[i].point_2.x + ((structure_max_con[i].point_2.x - structure_min_con[i].point_2.x) *  weight_con[i]);
-                    structure_con[i].point_2.y = structure_min_con[i].point_2.y + ((structure_max_con[i].point_2.y - structure_min_con[i].point_2.y) *  weight_con[i]);
+                    structure_con[i].point_2.x = structure_min_con[i].point_2.x + ((structure_max_con[i].point_2.x - structure_min_con[i].point_2.x) *  updated_weight);
+                    structure_con[i].point_2.y = structure_min_con[i].point_2.y + ((structure_max_con[i].point_2.y - structure_min_con[i].point_2.y) *  updated_weight);
 
-                    structure_con[i].point_3.x = structure_min_con[i].point_3.x + ((structure_max_con[i].point_3.x - structure_min_con[i].point_3.x) *  weight_con[i]);
-                    structure_con[i].point_3.y = structure_min_con[i].point_3.y + ((structure_max_con[i].point_3.y - structure_min_con[i].point_3.y) *  weight_con[i]);
+                    structure_con[i].point_3.x = structure_min_con[i].point_3.x + ((structure_max_con[i].point_3.x - structure_min_con[i].point_3.x) *  updated_weight);
+                    structure_con[i].point_3.y = structure_min_con[i].point_3.y + ((structure_max_con[i].point_3.y - structure_min_con[i].point_3.y) *  updated_weight);
 
 
-                    structure_con[i].base_0.x = structure_min_con[i].base_0.x + ((structure_max_con[i].base_0.x - structure_min_con[i].base_0.x) *  weight_con[i]);
-                    structure_con[i].base_0.y = structure_min_con[i].base_0.y + ((structure_max_con[i].base_0.y - structure_min_con[i].base_0.y) *  weight_con[i]);
+                    structure_con[i].base_0.x = structure_min_con[i].base_0.x + ((structure_max_con[i].base_0.x - structure_min_con[i].base_0.x) *  updated_weight);
+                    structure_con[i].base_0.y = structure_min_con[i].base_0.y + ((structure_max_con[i].base_0.y - structure_min_con[i].base_0.y) *  updated_weight);
 
-                    structure_con[i].base_1.x = structure_min_con[i].base_1.x + ((structure_max_con[i].base_1.x - structure_min_con[i].base_1.x) *  weight_con[i]);
-                    structure_con[i].base_1.y = structure_min_con[i].base_1.y + ((structure_max_con[i].base_1.y - structure_min_con[i].base_1.y) *  weight_con[i]);
+                    structure_con[i].base_1.x = structure_min_con[i].base_1.x + ((structure_max_con[i].base_1.x - structure_min_con[i].base_1.x) *  updated_weight);
+                    structure_con[i].base_1.y = structure_min_con[i].base_1.y + ((structure_max_con[i].base_1.y - structure_min_con[i].base_1.y) *  updated_weight);
                     
                 }
 
@@ -261,14 +268,14 @@
                 }
 
 
-                for(let i = 0; i < scale_con.length; i++){
-                    scale_con[i] = assets.scale; //apply changes here to make it into motion
-                    weight_con[i] = assets.weight; //apply changes here to make it into motion
-                }
+                // for(let i = 0; i < scale_con.length; i++){
+                //     scale_con[i] = assets.scale; //apply changes here to make it into motion
+                //     weight_con[i] = updated_weight; //apply changes here to make it into motion
+                // }
 
                 
                 for(let i = 0; i < structure_con.length; i++){
-                    width_con[i] = (structure_con[i].point_1.x - structure_con[i].point_0.x) * scale_con[i];
+                    width_con[i] = (structure_con[i].point_1.x - structure_con[i].point_0.x) * assets.scale;
                 }
 
 
@@ -288,12 +295,12 @@
 
                     for(let i = 0; i < structure_con.length; i++){
                         ctx.beginPath();
-                        ctx.moveTo((structure_con[i].point_0.x * scale_con[i]) + updated_width_con[i] + text_alignment, (structure_con[i].point_0.y * scale_con[i]) + assets.position.y + pos_y_align[i]);
-                        ctx.lineTo((structure_con[i].point_1.x * scale_con[i]) + updated_width_con[i] + text_alignment, (structure_con[i].point_1.y * scale_con[i]) + assets.position.y + pos_y_align[i]);
-                        ctx.lineTo((structure_con[i].point_2.x * scale_con[i]) + updated_width_con[i] + text_alignment, (structure_con[i].point_2.y * scale_con[i]) + assets.position.y + pos_y_align[i]);
-                        ctx.lineTo((structure_con[i].point_3.x * scale_con[i]) + updated_width_con[i] + text_alignment, (structure_con[i].point_3.y * scale_con[i]) + assets.position.y + pos_y_align[i]);
+                        ctx.moveTo((structure_con[i].point_0.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_con[i].point_0.y * assets.scale) + assets.position.y + pos_y_align[i]);
+                        ctx.lineTo((structure_con[i].point_1.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_con[i].point_1.y * assets.scale) + assets.position.y + pos_y_align[i]);
+                        ctx.lineTo((structure_con[i].point_2.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_con[i].point_2.y * assets.scale) + assets.position.y + pos_y_align[i]);
+                        ctx.lineTo((structure_con[i].point_3.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_con[i].point_3.y * assets.scale) + assets.position.y + pos_y_align[i]);
                         
-                        ctx.lineTo((structure_con[i].point_0.x * scale_con[i]) + updated_width_con[i] + text_alignment, (structure_con[i].point_0.y * scale_con[i]) + assets.position.y + pos_y_align[i]);
+                        ctx.lineTo((structure_con[i].point_0.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_con[i].point_0.y * assets.scale) + assets.position.y + pos_y_align[i]);
 
                         ctx.strokeStyle = assets.structure_style;
                         ctx.lineWidth = assets.structure_width;
@@ -303,8 +310,8 @@
 
 
                         ctx.beginPath();
-                        ctx.moveTo((structure_con[i].base_0.x * scale_con[i]) + updated_width_con[i] + text_alignment, (structure_con[i].base_0.y * scale_con[i]) + assets.position.y + pos_y_align[i]);
-                        ctx.lineTo((structure_con[i].base_1.x * scale_con[i]) + updated_width_con[i] + text_alignment, (structure_con[i].base_1.y * scale_con[i]) + assets.position.y + pos_y_align[i]);
+                        ctx.moveTo((structure_con[i].base_0.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_con[i].base_0.y * assets.scale) + assets.position.y + pos_y_align[i]);
+                        ctx.lineTo((structure_con[i].base_1.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_con[i].base_1.y * assets.scale) + assets.position.y + pos_y_align[i]);
 
                         ctx.strokeStyle = assets.structure_style;
                         ctx.lineWidth = assets.structure_width;
@@ -316,28 +323,17 @@
 
                 }
 
-console.log(typeface_path_con)
-// console.log(letter_path_con)
                 // ---------------------------------------------------------------------------------------------------------------------------------- //
-
 
                 for(let i = 0; i < letter_path_con.length; i++){
                     for(let j = 0; j < letter_path_con[i].length; j++){
                         for(let k = 0; k < letter_path_con[i][j].length; k++){
-
-                            if (!typeface_path_con[i] || !typeface_path_con[i][0] || !typeface_path_con[i][0][j] || !typeface_path_con[i][0][j][k]) {
-                                console.error('Undefined value at: ', i, j, k, typeface_path_con[i]);
-                                console.error('Undefined value at: ', i, j, k, typeface_path_con[i][j]);
-                                console.error('Undefined value at: ', i, j, k, typeface_path_con[i][j][k]);
-                                // continue;
-                            }
-
-                            letter_path_con[i][j][k].x = typeface_path_con[i][0][j][k].x + ((typeface_path_con[i][1][j][k].x - typeface_path_con[i][0][j][k].x) * weight_con[i]);
-                            letter_path_con[i][j][k].y = typeface_path_con[i][0][j][k].y + ((typeface_path_con[i][1][j][k].y - typeface_path_con[i][0][j][k].y) * weight_con[i]);
-                            letter_path_con[i][j][k].in_x = typeface_path_con[i][0][j][k].in_x + ((typeface_path_con[i][1][j][k].in_x - typeface_path_con[i][0][j][k].in_x) * weight_con[i]);
-                            letter_path_con[i][j][k].in_y = typeface_path_con[i][0][j][k].in_y + ((typeface_path_con[i][1][j][k].in_y - typeface_path_con[i][0][j][k].in_y) * weight_con[i]);
-                            letter_path_con[i][j][k].out_x = typeface_path_con[i][0][j][k].out_x + ((typeface_path_con[i][1][j][k].out_x - typeface_path_con[i][0][j][k].out_x) * weight_con[i]);
-                            letter_path_con[i][j][k].out_y = typeface_path_con[i][0][j][k].out_y + ((typeface_path_con[i][1][j][k].out_y - typeface_path_con[i][0][j][k].out_y) * weight_con[i]);
+                            letter_path_con[i][j][k].x = typeface_path_con[i][0][j][k].x + ((typeface_path_con[i][1][j][k].x - typeface_path_con[i][0][j][k].x) * updated_weight);
+                            letter_path_con[i][j][k].y = typeface_path_con[i][0][j][k].y + ((typeface_path_con[i][1][j][k].y - typeface_path_con[i][0][j][k].y) * updated_weight);
+                            letter_path_con[i][j][k].in_x = typeface_path_con[i][0][j][k].in_x + ((typeface_path_con[i][1][j][k].in_x - typeface_path_con[i][0][j][k].in_x) * updated_weight);
+                            letter_path_con[i][j][k].in_y = typeface_path_con[i][0][j][k].in_y + ((typeface_path_con[i][1][j][k].in_y - typeface_path_con[i][0][j][k].in_y) * updated_weight);
+                            letter_path_con[i][j][k].out_x = typeface_path_con[i][0][j][k].out_x + ((typeface_path_con[i][1][j][k].out_x - typeface_path_con[i][0][j][k].out_x) * updated_weight);
+                            letter_path_con[i][j][k].out_y = typeface_path_con[i][0][j][k].out_y + ((typeface_path_con[i][1][j][k].out_y - typeface_path_con[i][0][j][k].out_y) * updated_weight);
                         }
                     }
                 }
@@ -352,23 +348,23 @@ console.log(typeface_path_con)
                 for(let i = 0; i < letter_path_con.length; i++){
                     for(let j = 0; j < letter_path_con[i].length; j++){
 
-                            ctx.moveTo((letter_path_con[i][j][0].x * scale_con[i]) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][0].y + typeface[0].parameters.ascender) * scale_con[i]) + assets.position.y + pos_y_align[i]); 
+                            ctx.moveTo((letter_path_con[i][j][0].x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][0].y + typeface[0].parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i]); 
 
                             for(let k = 0; k < letter_path_con[i][j].length - 1; k++){
                                 ctx.bezierCurveTo(
-                                    (letter_path_con[i][j][k].out_x * scale_con[i]) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][k].out_y + typeface[0].parameters.ascender) * scale_con[i]) + assets.position.y + pos_y_align[i],
-                                    (letter_path_con[i][j][k + 1].in_x * scale_con[i]) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][k + 1].in_y + typeface[0].parameters.ascender) * scale_con[i]) + assets.position.y + pos_y_align[i],
-                                    (letter_path_con[i][j][k + 1].x * scale_con[i]) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][k + 1].y + typeface[0].parameters.ascender) * scale_con[i]) + assets.position.y + pos_y_align[i]
+                                    (letter_path_con[i][j][k].out_x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][k].out_y + typeface[0].parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i],
+                                    (letter_path_con[i][j][k + 1].in_x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][k + 1].in_y + typeface[0].parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i],
+                                    (letter_path_con[i][j][k + 1].x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][k + 1].y + typeface[0].parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i]
                                 );
                             }
 
                             ctx.bezierCurveTo(
-                                (letter_path_con[i][j][letter_path_con[i][j].length - 1].out_x * scale_con[i]) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][letter_path_con[i][j].length - 1].out_y + typeface[0].parameters.ascender) * scale_con[i]) + assets.position.y + pos_y_align[i],
-                                (letter_path_con[i][j][0].in_x * scale_con[i]) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][0].in_y + typeface[0].parameters.ascender) * scale_con[i]) + assets.position.y + pos_y_align[i],
-                                (letter_path_con[i][j][0].x * scale_con[i]) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][0].y + typeface[0].parameters.ascender) * scale_con[i]) + assets.position.y + pos_y_align[i]
+                                (letter_path_con[i][j][letter_path_con[i][j].length - 1].out_x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][letter_path_con[i][j].length - 1].out_y + typeface[0].parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i],
+                                (letter_path_con[i][j][0].in_x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][0].in_y + typeface[0].parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i],
+                                (letter_path_con[i][j][0].x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][0].y + typeface[0].parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i]
                             );
 
-                            ctx.lineTo((letter_path_con[i][j][0].x * scale_con[i]) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][0].y + typeface[0].parameters.ascender) * scale_con[i]) + assets.position.y + pos_y_align[i]);
+                            ctx.lineTo((letter_path_con[i][j][0].x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][0].y + typeface[0].parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i]);
 
                     }
                 }
@@ -428,7 +424,7 @@ console.log(typeface_path_con)
         let typeface = [Neue_Haas_Grotesk_Display_Pro_15_XXThin, Neue_Haas_Grotesk_Display_Pro_95_Black]
         // let typeface = [Neue_Haas_Grotesk_Text_Pro_55_Roman, Neue_Haas_Grotesk_Text_Pro_65_Medium, Neue_Haas_Grotesk_Text_Pro_75_Bold]
 
-        let letter_a_1 = new VariableFontOnCanvas(typeface, 'Hamburgefonstiv', assets);
+        let letter_a_1 = new TransitionFontOnCanvas(typeface, 'Hamburgefonstiv', assets);
 
 
 
@@ -445,7 +441,7 @@ console.log(typeface_path_con)
             ctx.fill();
             ctx.closePath();
 
-            letter_a_1.draw();
+            letter_a_1.draw(0.5);
 
 
             window.requestAnimationFrame(anim);
