@@ -44,8 +44,10 @@
     <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 76 Bold Italic_data.js"></script>
     <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 95 Black_data.js"></script>
     <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 96 Black Italic_data.js"></script>
-    <script>
 
+
+
+    <script>
 
         let canvas = document.getElementById('canvas');
         let ctx = canvas.getContext('2d');
@@ -60,7 +62,8 @@
 
 
 
-        function VariableFontOnCanvas(typeface, letter, assets){
+        function VariableFontOnCanvas(variablefont, assets, text){
+
 
             let defaults = {
                 position: { x: 0, y: 0 },
@@ -84,435 +87,97 @@
                     assets[prop] = defaults[prop];
                 }
             }
+                       
             
+            let number_of_variables = Object.entries(variablefont[0].variables).length;
 
-
-            
-
-            
-            //  finding the unicode of the each letter
-            let unicode_con = [];
-
-
-            for(let i = 0; i < letter.length; i++){
-                for(let j = 0; j < Object.entries(typeface[0].letters.info).length; j++){
-                    if(letter[i].charCodeAt() == typeface[0].letters.info[j].unicode){
-                        unicode_con[i] = j;
-                    }
-                }
-            }
-
-
-
-
-            //  organizing the info
-            let typeface_path_con = [];
-            let typeface_info_con = [];
-
-            for(let i = 0; i < letter.length; i++){
-                typeface_path_con[i] = [];
-                typeface_info_con[i] = [];
-                for(let j = 0; j < typeface.length; j++){
-                    typeface_path_con[i][j] = [];
-                    typeface_info_con[i][j] = [];
-                }
-            }
-
-            for(let i = 0; i < letter.length; i++){
-                for(let j = 0; j < typeface.length; j++){
-                    typeface_path_con[i][j] = typeface[j].letters.path[unicode_con[i]];
-                    typeface_info_con[i][j] = typeface[j].letters.info[unicode_con[i]];
-                }
-            }
-
-
-            let letter_path_con = [];
-
-            for(let i = 0; i < letter.length; i++){
-                letter_path_con[i] = structuredClone(typeface_path_con[i][assets.weight]);
-            }
-
-
-            
-            let structure_con = [];
-            let structure_max_con = [];
-            let structure_min_con;
-
-            for(let i = 0; i < letter.length; i++){
-                structure_con[i] = [];
-                structure_max_con[i] = [];
-            }
-
-
-            for(let i = 0; i < letter.length; i++){
-                structure_con[i] = {
-                    point_0: {x: 0, y: 0}, 
-                    point_1: {x: typeface_info_con[i][0].advanceWidth, y: 0}, 
-                    point_2: {x: typeface_info_con[i][0].advanceWidth, y: -(typeface[0].parameters.descender - typeface[0].parameters.ascender)}, 
-                    point_3: {x: 0, y: -(typeface[0].parameters.descender - typeface[0].parameters.ascender)},
-                            
-                    base_0: {x: 0, y:  typeface[0].parameters.ascender},
-                    base_1: {x: typeface_info_con[i][0].advanceWidth, y : typeface[0].parameters.ascender}
-                }
-            }
-
-            for(let i = 0; i < letter.length; i++){
-                structure_max_con[i] = {
-                    point_0: {x: 0, y: 0}, 
-                    point_1: {x: typeface_info_con[i][1].advanceWidth, y: 0}, 
-                    point_2: {x: typeface_info_con[i][1].advanceWidth, y: -(typeface[1].parameters.descender - typeface[1].parameters.ascender)}, 
-                    point_3: {x: 0, y: -(typeface[1].parameters.descender - typeface[1].parameters.ascender)},
-                            
-                    base_0: {x: 0, y:  typeface[1].parameters.ascender},
-                    base_1: {x: typeface_info_con[i][1].advanceWidth, y : typeface[1].parameters.ascender}
-                }
-            }
-
-            structure_min_con = structuredClone(structure_con);
-
-
-
-
-
-
-            let width_con = [];
-
-
-            let updated_width_con = [];
-            // let scale_con = [];
-            // let weight_con = [];
-            // let scale_con = [];
-            // let weight_con = [];
-            let letter_pos_con = [];
-            let pos_y_align = [];
-
-            for(let i = 0; i < letter.length; i++){
-                updated_width_con[i] = 0;
-                // scale_con[i] = assets.scale;
-                // weight_con[i] = assets.weight;
-                letter_pos_con[i] = {x:0, y:0};
-            }
-
-
-        
-
-
-            this.draw = function(updated_weight){
-
-                if(updated_weight == undefined){
-                    updated_weight = assets.weight
-                }
-
-
-                let total_width = sumArray(width_con);
-
-
-                 // might be able to take out of draw function if scale don't change in motion
-                 if(assets.alignment == 'center'){
-                    for(let i = 0; i < letter.length; i++){
-                        text_alignment = assets.position.x - (total_width / 2);
-                    }
-                }else if(assets.alignment == 'left'){
-                    for(let i = 0; i < letter.length; i++){
-                        text_alignment = assets.position.x;
-                    }
-                }else if(assets.alignment == 'right'){
-                    for(let i = 0; i < letter.length; i++){
-                        text_alignment = assets.position.x - total_width;
-                    }
-                }
+            //  Making infos and variables based on the selected letters
+            function text_info(){
 
                 
+                //  finding the unicode of the each letter
+                let unicode_con = [];
 
 
-                // might be able to take out of draw function if scale don't change in motion
-                if(assets.sticky == 'bottom'){
-                    for(let i = 0; i < letter.length; i++){
-                        pos_y_align[i] = - ((typeface[0].parameters.ascender - typeface[0].parameters.descender) * scale_con[i]);
-                    }
-                }else{
-                    for(let i = 0; i < letter.length; i++){
-                        pos_y_align[i] = 0;
-                    }
-                }
-
-
-
-                for(let i = 0; i < structure_con.length; i++){
-
-                    structure_con[i].point_0.x = structure_min_con[i].point_0.x + ((structure_max_con[i].point_0.x - structure_min_con[i].point_0.x) *  updated_weight);
-                    structure_con[i].point_0.y = structure_min_con[i].point_0.y + ((structure_max_con[i].point_0.y - structure_min_con[i].point_0.y) *  updated_weight);
-
-                    structure_con[i].point_1.x = structure_min_con[i].point_1.x + ((structure_max_con[i].point_1.x - structure_min_con[i].point_1.x) *  updated_weight);
-                    structure_con[i].point_1.y = structure_min_con[i].point_1.y + ((structure_max_con[i].point_1.y - structure_min_con[i].point_1.y) *  updated_weight);
-
-                    structure_con[i].point_2.x = structure_min_con[i].point_2.x + ((structure_max_con[i].point_2.x - structure_min_con[i].point_2.x) *  updated_weight);
-                    structure_con[i].point_2.y = structure_min_con[i].point_2.y + ((structure_max_con[i].point_2.y - structure_min_con[i].point_2.y) *  updated_weight);
-
-                    structure_con[i].point_3.x = structure_min_con[i].point_3.x + ((structure_max_con[i].point_3.x - structure_min_con[i].point_3.x) *  updated_weight);
-                    structure_con[i].point_3.y = structure_min_con[i].point_3.y + ((structure_max_con[i].point_3.y - structure_min_con[i].point_3.y) *  updated_weight);
-
-
-                    structure_con[i].base_0.x = structure_min_con[i].base_0.x + ((structure_max_con[i].base_0.x - structure_min_con[i].base_0.x) *  updated_weight);
-                    structure_con[i].base_0.y = structure_min_con[i].base_0.y + ((structure_max_con[i].base_0.y - structure_min_con[i].base_0.y) *  updated_weight);
-
-                    structure_con[i].base_1.x = structure_min_con[i].base_1.x + ((structure_max_con[i].base_1.x - structure_min_con[i].base_1.x) *  updated_weight);
-                    structure_con[i].base_1.y = structure_min_con[i].base_1.y + ((structure_max_con[i].base_1.y - structure_min_con[i].base_1.y) *  updated_weight);
-                    
-                }
-
-
-
-                for(let i = 0; i < letter.length; i++){
-                    letter_pos_con[i] = {x: structure_con[i].point_1.x - structure_con[i].point_0.x, y: structure_con[i].point_3.y/2};
-                }
-
-                
-                for(let i = 0; i < structure_con.length; i++){
-                    width_con[i] = (structure_con[i].point_1.x - structure_con[i].point_0.x) * assets.scale;
-                }
-
-
-                // Variable to store the cumulative sum
-                let cumulativeSum = 0;
-
-                // Loop through the original array starting from index 1
-                for (let i = 0; i < width_con.length; i++) {
-                    cumulativeSum += width_con[i];
-                    updated_width_con[i + 1] = cumulativeSum;
-                }
-
-
-
-
-                if(assets.structure_width !== 0){
-
-                    for(let i = 0; i < structure_con.length; i++){
-                        ctx.beginPath();
-                        ctx.moveTo((structure_con[i].point_0.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_con[i].point_0.y * assets.scale) + assets.position.y + pos_y_align[i]);
-                        ctx.lineTo((structure_con[i].point_1.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_con[i].point_1.y * assets.scale) + assets.position.y + pos_y_align[i]);
-                        ctx.lineTo((structure_con[i].point_2.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_con[i].point_2.y * assets.scale) + assets.position.y + pos_y_align[i]);
-                        ctx.lineTo((structure_con[i].point_3.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_con[i].point_3.y * assets.scale) + assets.position.y + pos_y_align[i]);
-                        
-                        ctx.lineTo((structure_con[i].point_0.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_con[i].point_0.y * assets.scale) + assets.position.y + pos_y_align[i]);
-
-                        ctx.strokeStyle = assets.structure_style;
-                        ctx.lineWidth = assets.structure_width;
-                        ctx.stroke();
-
-                        ctx.closePath();
-
-
-                        ctx.beginPath();
-                        ctx.moveTo((structure_con[i].base_0.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_con[i].base_0.y * assets.scale) + assets.position.y + pos_y_align[i]);
-                        ctx.lineTo((structure_con[i].base_1.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_con[i].base_1.y * assets.scale) + assets.position.y + pos_y_align[i]);
-
-                        ctx.strokeStyle = assets.structure_style;
-                        ctx.lineWidth = assets.structure_width;
-                        ctx.stroke();
-
-                        ctx.closePath();
-
-                    }
-
-                }
-
-                // ---------------------------------------------------------------------------------------------------------------------------------- //
-
-                for(let i = 0; i < letter_path_con.length; i++){
-                    for(let j = 0; j < letter_path_con[i].length; j++){
-                        for(let k = 0; k < letter_path_con[i][j].length; k++){
-                            letter_path_con[i][j][k].x = typeface_path_con[i][0][j][k].x + ((typeface_path_con[i][1][j][k].x - typeface_path_con[i][0][j][k].x) * updated_weight);
-                            letter_path_con[i][j][k].y = typeface_path_con[i][0][j][k].y + ((typeface_path_con[i][1][j][k].y - typeface_path_con[i][0][j][k].y) * updated_weight);
-                            letter_path_con[i][j][k].in_x = typeface_path_con[i][0][j][k].in_x + ((typeface_path_con[i][1][j][k].in_x - typeface_path_con[i][0][j][k].in_x) * updated_weight);
-                            letter_path_con[i][j][k].in_y = typeface_path_con[i][0][j][k].in_y + ((typeface_path_con[i][1][j][k].in_y - typeface_path_con[i][0][j][k].in_y) * updated_weight);
-                            letter_path_con[i][j][k].out_x = typeface_path_con[i][0][j][k].out_x + ((typeface_path_con[i][1][j][k].out_x - typeface_path_con[i][0][j][k].out_x) * updated_weight);
-                            letter_path_con[i][j][k].out_y = typeface_path_con[i][0][j][k].out_y + ((typeface_path_con[i][1][j][k].out_y - typeface_path_con[i][0][j][k].out_y) * updated_weight);
+                for(let i = 0; i < text.length; i++){
+                    for(let j = 0; j < Object.entries(variablefont[0].typeface.letters.info).length; j++){
+                        if(text[i].charCodeAt() == variablefont[0].typeface.letters.info[j].unicode){
+                            unicode_con[i] = j;
                         }
                     }
                 }
 
 
+                //  organizing the info
+                let text_path_con = [];
+                let text_info_con = [];
+                let text_structure_con = [];
 
-
-                
-                ctx.beginPath();
-
-                
-                for(let i = 0; i < letter_path_con.length; i++){
-                    for(let j = 0; j < letter_path_con[i].length; j++){
-
-                            ctx.moveTo((letter_path_con[i][j][0].x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][0].y + typeface[0].parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i]); 
-
-                            for(let k = 0; k < letter_path_con[i][j].length - 1; k++){
-                                ctx.bezierCurveTo(
-                                    (letter_path_con[i][j][k].out_x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][k].out_y + typeface[0].parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i],
-                                    (letter_path_con[i][j][k + 1].in_x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][k + 1].in_y + typeface[0].parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i],
-                                    (letter_path_con[i][j][k + 1].x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][k + 1].y + typeface[0].parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i]
-                                );
-                            }
-
-                            ctx.bezierCurveTo(
-                                (letter_path_con[i][j][letter_path_con[i][j].length - 1].out_x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][letter_path_con[i][j].length - 1].out_y + typeface[0].parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i],
-                                (letter_path_con[i][j][0].in_x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][0].in_y + typeface[0].parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i],
-                                (letter_path_con[i][j][0].x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][0].y + typeface[0].parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i]
-                            );
-
-                            ctx.lineTo((letter_path_con[i][j][0].x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][0].y + typeface[0].parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i]);
-
+                for(let i = 0; i < variablefont.length; i++){
+                    text_path_con[i] = [];
+                    text_info_con[i] = [];
+                    text_structure_con[i] = [];
+                    // text_variables[i] = {variablefont[i].variables: {Weight: 0, Italic: 0}};
+                    for(let j = 0; j < text.length; j++){
+                        text_path_con[i][j] = [];
+                        text_info_con[i][j] = [];
+                        text_structure_con[i][j] = [];
                     }
                 }
 
-
-                ctx.fillStyle = assets.color;
-                ctx.fill();
-                ctx.strokeStyle = assets.stroke_style;
-                ctx.lineWidth = assets.stroke_width;
-                ctx.stroke();
-                ctx.closePath();
-
-                
-                
-                
-            }
-
-
-            function sumArray(arr) {
-                let sum = 0;
-
-                for (let i = 0; i < arr.length; i++) {
-                    sum += arr[i];
-                }
-
-                return sum;
-            }
-        
-
-        }
-
-
-
-
-        function VariableFontOnCanvas_1(typeface, assets, letter){
-
-
-
-
-            let defaults = {
-                position: { x: 0, y: 0 },
-                weight: 0,
-                scale: 1,
-                alignment: "left",
-                sticky: "top",
-                color: "#ffffff",
-                line_height: 1,
-                tracking: 0,
-                kerning: 0,
-                stroke_width: 0,
-                stroke_style: "#ffffff",
-                structure_width: 0,
-                structure_style: "#ffffff"
-            };
-
-            
-            for (const prop in defaults) {
-                if (assets[prop] === undefined) {
-                    assets[prop] = defaults[prop];
-                }
-            }
-            
-
-
-            if (assets.typeface_italic) {
-                console.log('its here')
-            }
-
-            console.log(assets.typeface_regular)
-
-            
-            //  finding the unicode of the each letter
-            let unicode_con = [];
-
-
-            for(let i = 0; i < letter.length; i++){
-                for(let j = 0; j < Object.entries(typeface[0].letters.info).length; j++){
-                    if(letter[i].charCodeAt() == typeface[0].letters.info[j].unicode){
-                        unicode_con[i] = j;
+                for(let i = 0; i < variablefont.length; i++){
+                    for(let j = 0; j < text.length; j++){
+                        text_path_con[i][j] = variablefont[j].typeface.letters.path[unicode_con[j]];
+                        text_info_con[i][j] = variablefont[j].typeface.letters.info[unicode_con[j]];
+                        text_structure_con[i][j] = {
+                            point_0: {x: 0, y: 0}, 
+                            point_1: {x: text_info_con[i][j].advanceWidth, y: 0}, 
+                            point_2: {x: text_info_con[i][j].advanceWidth, y: -(variablefont[i].typeface.parameters.descender - variablefont[i].typeface.parameters.ascender)}, 
+                            point_3: {x: 0, y: -(variablefont[i].typeface.parameters.descender - variablefont[i].typeface.parameters.ascender)},
+                                    
+                            base_0: {x: 0, y:  variablefont[i].typeface.parameters.ascender},
+                            base_1: {x: text_info_con[i][j].advanceWidth, y : variablefont[i].typeface.parameters.ascender}
+                        }
                     }
                 }
-            }
+
+                // Might be cleaner to use this...
+                let text_variables = variablefont.map(item => item.variables);;
 
 
+                // .variables: {Weight: 0, Italic: 0}}
+                console.log(Object.entries(variablefont[0].variables)[0])
 
+                let text_path_to_draw = [];
 
-            //  organizing the info
-            let typeface_path_con = [];
-            let typeface_info_con = [];
-
-            for(let i = 0; i < letter.length; i++){
-                typeface_path_con[i] = [];
-                typeface_info_con[i] = [];
-                for(let j = 0; j < typeface.length; j++){
-                    typeface_path_con[i][j] = [];
-                    typeface_info_con[i][j] = [];
+                for(let i = 0; i < text.length; i++){
+                    text_path_to_draw[i] = structuredClone(text_path_con[i][assets.weight]);
                 }
-            }
-
-            for(let i = 0; i < letter.length; i++){
-                for(let j = 0; j < typeface.length; j++){
-                    typeface_path_con[i][j] = typeface[j].letters.path[unicode_con[i]];
-                    typeface_info_con[i][j] = typeface[j].letters.info[unicode_con[i]];
-                }
-            }
 
 
-            let letter_path_con = [];
 
-            for(let i = 0; i < letter.length; i++){
-                letter_path_con[i] = structuredClone(typeface_path_con[i][assets.weight]);
-            }
+                // what would be the best text format?
+                
+                // text_package = {
+                //     text_letters: text,
+                //     // text_variables: {wei}
+                //     text_path_con : text_path_con,
+                //     text_info_con : text_info_con,
+                //     text_structure_con : text_structure_con
+                // }
 
+                // console.log(text_package)
 
-            
-            let structure_con = [];
-            let structure_max_con = [];
-            let structure_min_con;
+                return {text_path_con, text_info_con, text_structure_con}
 
-            for(let i = 0; i < letter.length; i++){
-                structure_con[i] = [];
-                structure_max_con[i] = [];
             }
 
 
-            for(let i = 0; i < letter.length; i++){
-                structure_con[i] = {
-                    point_0: {x: 0, y: 0}, 
-                    point_1: {x: typeface_info_con[i][0].advanceWidth, y: 0}, 
-                    point_2: {x: typeface_info_con[i][0].advanceWidth, y: -(typeface[0].parameters.descender - typeface[0].parameters.ascender)}, 
-                    point_3: {x: 0, y: -(typeface[0].parameters.descender - typeface[0].parameters.ascender)},
-                            
-                    base_0: {x: 0, y:  typeface[0].parameters.ascender},
-                    base_1: {x: typeface_info_con[i][0].advanceWidth, y : typeface[0].parameters.ascender}
-                }
-            }
+            let text_package = text_info();
 
-            for(let i = 0; i < letter.length; i++){
-                structure_max_con[i] = {
-                    point_0: {x: 0, y: 0}, 
-                    point_1: {x: typeface_info_con[i][1].advanceWidth, y: 0}, 
-                    point_2: {x: typeface_info_con[i][1].advanceWidth, y: -(typeface[1].parameters.descender - typeface[1].parameters.ascender)}, 
-                    point_3: {x: 0, y: -(typeface[1].parameters.descender - typeface[1].parameters.ascender)},
-                            
-                    base_0: {x: 0, y:  typeface[1].parameters.ascender},
-                    base_1: {x: typeface_info_con[i][1].advanceWidth, y : typeface[1].parameters.ascender}
-                }
-            }
+console.log(text_package)
 
-            structure_min_con = structuredClone(structure_con);
-
-
-
-
+// console.log(Object.keys(variablefont[0].variables)[0])
 
 
             let width_con = [];
@@ -522,7 +187,7 @@
             let letter_pos_con = [];
             let pos_y_align = [];
 
-            for(let i = 0; i < letter.length; i++){
+            for(let i = 0; i < text.length; i++){
                 updated_width_con[i] = 0;
                 letter_pos_con[i] = {x:0, y:0};
             }
@@ -532,7 +197,8 @@
 
 
             this.draw = function(variables){
-// console.log(variables)
+
+
                 if(variables.wdth == undefined){
                     variables.wdth = assets.weight
                 }
@@ -543,15 +209,15 @@
 
                  // might be able to take out of draw function if scale don't change in motion
                  if(assets.alignment == 'center'){
-                    for(let i = 0; i < letter.length; i++){
+                    for(let i = 0; i < text.length; i++){
                         text_alignment = assets.position.x - (total_width / 2);
                     }
                 }else if(assets.alignment == 'left'){
-                    for(let i = 0; i < letter.length; i++){
+                    for(let i = 0; i < text.length; i++){
                         text_alignment = assets.position.x;
                     }
                 }else if(assets.alignment == 'right'){
-                    for(let i = 0; i < letter.length; i++){
+                    for(let i = 0; i < text.length; i++){
                         text_alignment = assets.position.x - total_width;
                     }
                 }
@@ -561,11 +227,11 @@
 
                 // might be able to take out of draw function if scale don't change in motion
                 if(assets.sticky == 'bottom'){
-                    for(let i = 0; i < letter.length; i++){
-                        pos_y_align[i] = - ((typeface[0].parameters.ascender - typeface[0].parameters.descender) * scale_con[i]);
+                    for(let i = 0; i < text.length; i++){
+                        pos_y_align[i] = - ((variablefont[0].typeface.parameters.ascender - variablefont[0].typeface.parameters.descender) * scale_con[i]);
                     }
                 }else{
-                    for(let i = 0; i < letter.length; i++){
+                    for(let i = 0; i < text.length; i++){
                         pos_y_align[i] = 0;
                     }
                 }
@@ -597,7 +263,7 @@
 
 
 
-                for(let i = 0; i < letter.length; i++){
+                for(let i = 0; i < text.length; i++){
                     letter_pos_con[i] = {x: structure_con[i].point_1.x - structure_con[i].point_0.x, y: structure_con[i].point_3.y/2};
                 }
 
@@ -679,23 +345,23 @@
                 for(let i = 0; i < letter_path_con.length; i++){
                     for(let j = 0; j < letter_path_con[i].length; j++){
 
-                            ctx.moveTo((letter_path_con[i][j][0].x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][0].y + typeface[0].parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i]); 
+                            ctx.moveTo((letter_path_con[i][j][0].x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][0].y + variablefont[0].typeface.parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i]); 
 
                             for(let k = 0; k < letter_path_con[i][j].length - 1; k++){
                                 ctx.bezierCurveTo(
-                                    (letter_path_con[i][j][k].out_x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][k].out_y + typeface[0].parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i],
-                                    (letter_path_con[i][j][k + 1].in_x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][k + 1].in_y + typeface[0].parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i],
-                                    (letter_path_con[i][j][k + 1].x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][k + 1].y + typeface[0].parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i]
+                                    (letter_path_con[i][j][k].out_x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][k].out_y + variablefont[0].typeface.parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i],
+                                    (letter_path_con[i][j][k + 1].in_x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][k + 1].in_y + variablefont[0].typeface.parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i],
+                                    (letter_path_con[i][j][k + 1].x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][k + 1].y + variablefont[0].typeface.parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i]
                                 );
                             }
 
                             ctx.bezierCurveTo(
-                                (letter_path_con[i][j][letter_path_con[i][j].length - 1].out_x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][letter_path_con[i][j].length - 1].out_y + typeface[0].parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i],
-                                (letter_path_con[i][j][0].in_x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][0].in_y + typeface[0].parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i],
-                                (letter_path_con[i][j][0].x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][0].y + typeface[0].parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i]
+                                (letter_path_con[i][j][letter_path_con[i][j].length - 1].out_x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][letter_path_con[i][j].length - 1].out_y + variablefont[0].typeface.parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i],
+                                (letter_path_con[i][j][0].in_x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][0].in_y + variablefont[0].typeface.parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i],
+                                (letter_path_con[i][j][0].x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][0].y + variablefont[0].typeface.parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i]
                             );
 
-                            ctx.lineTo((letter_path_con[i][j][0].x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][0].y + typeface[0].parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i]);
+                            ctx.lineTo((letter_path_con[i][j][0].x * assets.scale) + updated_width_con[i] + text_alignment, ((-letter_path_con[i][j][0].y + variablefont[0].typeface.parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i]);
 
                     }
                 }
@@ -728,113 +394,70 @@
         }
 
 
-        let assets = {
-                    position: {x: 100, y:100},
-                    weight: 1,
-                    scale: 0.1,
-                    alignment: 'left',
-                    italic: false,
-                    sticky: undefined,
-                    color: undefined,
-                    line_height: undefined,
-                    tracking: undefined,
-                    kerning: undefined,
-                    stroke_width: 1,
-                    stroke_style: undefined,
-                    structure_width: 1,
-                    structure_style: undefined,
-        }
-
-
-
-
-
-        let typeface = [Neue_Haas_Grotesk_Display_Pro_15_XXThin, Neue_Haas_Grotesk_Display_Pro_95_Black]
-
-
-        let letter_a_1 = new VariableFontOnCanvas(typeface, 'Hamburgefonstiv', assets);
 
 
 
 
 
 
-
-        let typeface_1 = [
+        let variblefont = [
             {
                 typeface: Neue_Haas_Grotesk_Display_Pro_15_XXThin,
-                Weight: 0,
-                Italic: 0,
+                variables: {Weight: 0, Italic: 0}
             },{
                 typeface: Neue_Haas_Grotesk_Display_Pro_15_XXThin,
-                Weight: 100,
-                Italic: 0,
+                variables: {Weight: 100, Italic: 0}
             },{
                 typeface: Neue_Haas_Grotesk_Display_Pro_25_XThin,
-                Weight: 200,
-                Italic: 0,
+                variables: {Weight: 200, Italic: 0}
             },{
                 typeface: Neue_Haas_Grotesk_Display_Pro_35_Thin,
-                Weight: 300,
-                Italic: 0,
+                variables: {Weight: 300, Italic: 0}
             },{
                 typeface: Neue_Haas_Grotesk_Display_Pro_45_Light,
-                Weight: 400,
-                Italic: 0,
+                variables: {Weight: 400, Italic: 0}
             },{
                 typeface: Neue_Haas_Grotesk_Display_Pro_55_Roman,
-                Weight: 500,
-                Italic: 0,
+                variables: {Weight: 500, Italic: 0}
             },{
                 typeface: Neue_Haas_Grotesk_Display_Pro_65_Medium,
-                Weight: 600,
-                Italic: 0,
+                variables: {Weight: 600, Italic: 0}
             },{
                 typeface: Neue_Haas_Grotesk_Display_Pro_75_Bold,
-                Weight: 700,
-                Italic: 0,
+                variables: {Weight: 700, Italic: 0}
             },{
                 typeface: Neue_Haas_Grotesk_Display_Pro_95_Black,
-                Weight: 800,
-                Italic: 0,
+                variables: {Weight: 800, Italic: 0}
             },{
                 typeface: Neue_Haas_Grotesk_Display_Pro_16_XXThin_Italic,
-                Weight: 0,
-                Italic: 100,
+                variables: {Weight: 0, Italic: 100}
             },{
                 typeface: Neue_Haas_Grotesk_Display_Pro_26_XThin_Italic,
-                Weight: 0,
-                Italic: 100,
+                variables: {Weight: 0, Italic: 100}
             },{
                 typeface: Neue_Haas_Grotesk_Display_Pro_36_Thin_Italic,
-                Weight: 0,
-                Italic: 100,
+                variables: {Weight: 0, Italic: 100}
             },{
                 typeface: Neue_Haas_Grotesk_Display_Pro_46_Light_Italic,
-                Weight: 0,
-                Italic: 100,
+                variables: {Weight: 0, Italic: 100}
             },{
                 typeface: Neue_Haas_Grotesk_Display_Pro_56_Roman_Italic,
-                Weight: 0,
-                Italic: 100,
+                variables: {Weight: 0, Italic: 100}
             },{
                 typeface: Neue_Haas_Grotesk_Display_Pro_66_Medium_Italic,
-                Weight: 0,
-                Italic: 100,
+                variables: {Weight: 0, Italic: 100}
             },{
                 typeface: Neue_Haas_Grotesk_Display_Pro_76_Bold_Italic,
-                Weight: 0,
-                Italic: 100,
+                variables: {Weight: 0, Italic: 100}
             },{
                 typeface: Neue_Haas_Grotesk_Display_Pro_96_Black_Italic,
-                Weight: 0,
-                Italic: 100,
+                variables: {Weight: 0, Italic: 100}
             }
         ];
 
 
 
-        let assets_1 = {
+        let assets = {
                     position: {x: 100, y:100},
                     weight: 0,
                     scale: 0.1,
@@ -852,7 +475,7 @@
         };
 
 
-        let letter_a_2 = new VariableFontOnCanvas_1(typeface_1, assets_1, 'Hamburgefonstiv');
+        let letter_test = new VariableFontOnCanvas(variblefont, assets, 'Hamburgefonstiv');
 
 
         
@@ -869,10 +492,7 @@
 
             // letter_a_1.draw(0.5);
 
-            letter_a_2.draw({
-                wdth: 0.5, 
-                ital: 0.5
-            })
+            // letter_test.draw({Weight: 50, Italic: 0.5})
 
 
             window.requestAnimationFrame(anim);
