@@ -58,7 +58,67 @@
         ctx.oImageSmoothingEnabled = true;
 
 
-        
+
+
+        // const Arr = [
+        //     {path: {"x": 67,"y": 715,"in_x": 67,"in_y": 715,"out_x": 67,"out_y": 715}, variables: {Weight: 0, Italic: 0}},
+        //     {path: {"x": 47,"y": 215,"in_x": 13,"in_y": 992,"out_x": 44,"out_y": 56}, variables: {Weight: 10, Italic: 0}},
+        //     {path: {"x": 134,"y": 35,"in_x": 13,"in_y": 12,"out_x": 324,"out_y": 135}, variables: {Weight: 20, Italic: 0}},
+        //     {path: {"x": 54,"y": 2932,"in_x": 1235,"in_y": 12,"out_x": 74,"out_y": 5}, variables: {Weight: 30, Italic: 0}},
+        //     {path: {"x": 217,"y": 5435,"in_x": 54,"in_y": 87,"out_x": 544,"out_y": 15}, variables: {Weight: 40, Italic: 0}},
+        //     {path: {"x": 167,"y": 16,"in_x": 627,"in_y": 15,"out_x": 677,"out_y": 35}, variables: {Weight: 0, Italic: 0}},
+        //     {path: {"x": 427,"y": 385,"in_x": 3,"in_y": 792,"out_x": 34,"out_y": 86}, variables: {Weight: 10, Italic: 10}},
+        //     {path: {"x": 314,"y": 5,"in_x": 1,"in_y": 52,"out_x": 724,"out_y": 350}, variables: {Weight: 20, Italic: 20}},
+        //     {path: {"x": 4,"y": 22,"in_x": 15,"in_y": 126,"out_x": 4,"out_y": 50}, variables: {Weight: 30, Italic: 30}},
+        //     {path: {"x": 27,"y": 87,"in_x": 44,"in_y": 873,"out_x": 55,"out_y": 152}, variables: {Weight: 40, Italic: 40}}
+        // ];
+
+        // function interpolate(value1, value2, fraction) {
+        //     return value1 + (value2 - value1) * fraction;
+        // }
+
+        // function draw(inputVariables) {
+        //     // Find the two closest points
+        //     let lower = null;
+        //     let upper = null;
+
+        //     for (let i = 0; i < Arr.length; i++) {
+        //         let current = Arr[i].variables;
+        //         if (current.Weight <= inputVariables.Weight && current.Italic <= inputVariables.Italic) {
+        //             if (!lower || (current.Weight > lower.variables.Weight || (current.Weight === lower.variables.Weight && current.Italic > lower.variables.Italic))) {
+        //                 lower = Arr[i];
+        //             }
+        //         }
+        //         if (current.Weight >= inputVariables.Weight && current.Italic >= inputVariables.Italic) {
+        //             if (!upper || (current.Weight < upper.variables.Weight || (current.Weight === upper.variables.Weight && current.Italic < upper.variables.Italic))) {
+        //                 upper = Arr[i];
+        //             }
+        //         }
+        //     }
+
+        //     if (!lower || !upper) {
+        //         return null; // Or some default path value
+        //     }
+
+        //     // Calculate the interpolation fractions
+        //     const weightFraction = (inputVariables.Weight - lower.variables.Weight) / (upper.variables.Weight - lower.variables.Weight);
+        //     const italicFraction = (inputVariables.Italic - lower.variables.Italic) / (upper.variables.Italic - lower.variables.Italic);
+
+        //     // Interpolate the path values
+        //     const interpolatedPath = {
+        //         x: interpolate(lower.path.x, upper.path.x, weightFraction),
+        //         y: interpolate(lower.path.y, upper.path.y, weightFraction),
+        //         in_x: interpolate(lower.path.in_x, upper.path.in_x, weightFraction),
+        //         in_y: interpolate(lower.path.in_y, upper.path.in_y, weightFraction),
+        //         out_x: interpolate(lower.path.out_x, upper.path.out_x, weightFraction),
+        //         out_y: interpolate(lower.path.out_y, upper.path.out_y, weightFraction)
+        //     };
+
+        //     return interpolatedPath;
+        // }
+
+        // // Example usage
+        // console.log(draw({Weight: 39.5, Italic: 0.5}));
 
 
 
@@ -127,8 +187,8 @@
 
                 for(let i = 0; i < variablefont.length; i++){
                     for(let j = 0; j < text.length; j++){
-                        text_path_con[i][j] = variablefont[j].typeface.letters.path[unicode_con[j]];
-                        text_info_con[i][j] = variablefont[j].typeface.letters.info[unicode_con[j]];
+                        text_path_con[i][j] = variablefont[i].typeface.letters.path[unicode_con[j]];
+                        text_info_con[i][j] = variablefont[i].typeface.letters.info[unicode_con[j]];
                         text_structure_con[i][j] = {
                             point_0: {x: 0, y: 0}, 
                             point_1: {x: text_info_con[i][j].advanceWidth, y: 0}, 
@@ -145,47 +205,29 @@
                 let text_variables = variablefont.map(item => item.variables);;
 
 
-                // .variables: {Weight: 0, Italic: 0}}
-                console.log(Object.entries(variablefont[0].variables)[0])
-
-                let text_path_to_draw = [];
-
-                for(let i = 0; i < text.length; i++){
-                    text_path_to_draw[i] = structuredClone(text_path_con[i][assets.weight]);
-                }
-
-
 
                 // what would be the best text format?
                 
-                // text_package = {
-                //     text_letters: text,
-                //     // text_variables: {wei}
-                //     text_path_con : text_path_con,
-                //     text_info_con : text_info_con,
-                //     text_structure_con : text_structure_con
-                // }
-
-                // console.log(text_package)
-
-                return {text_path_con, text_info_con, text_structure_con}
+                return {text_variables, text_path_con, text_info_con, text_structure_con}
 
             }
 
 
             let text_package = text_info();
 
-console.log(text_package)
-
-// console.log(Object.keys(variablefont[0].variables)[0])
+            // console.log(text_package)
 
 
-            let width_con = [];
+
+
+
+
+
+            let text_structure_to_draw = structuredClone(text_package.text_structure_con[0]);
 
 
             let updated_width_con = [];
             let letter_pos_con = [];
-            let pos_y_align = [];
 
             for(let i = 0; i < text.length; i++){
                 updated_width_con[i] = 0;
@@ -193,15 +235,267 @@ console.log(text_package)
             }
 
 
+            let width_con = [];
+            let pos_y_align = [];
+
+
+
+let Arr = text_package.text_path_con[0]
+
+
+
+        function interpolate(value1, value2, fraction) {
+            return value1 + (value2 - value1) * fraction;
+        }
         
+        function findClosestPoints(arr, weight, italic) {
+            let lower = null;
+            let upper = null;
+
+            for (let i = 0; i < arr.length; i++) {
+                for (let j = 0; j < arr[i].length; j++) {
+                    for (let k = 0; k < arr[i][j].length; k++) {
+                        let current = arr[i][j][k];
+                        if (current.variables.Weight <= weight && current.variables.Italic <= italic) {
+                            if (!lower || (current.variables.Weight > lower.variables.Weight || (current.variables.Weight === lower.variables.Weight && current.variables.Italic > lower.variables.Italic))) {
+                                lower = current;
+                            }
+                        }
+                        if (current.variables.Weight >= weight && current.variables.Italic >= italic) {
+                            if (!upper || (current.variables.Weight < upper.variables.Weight || (current.variables.Weight === upper.variables.Weight && current.variables.Italic < upper.variables.Italic))) {
+                                upper = current;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return { lower, upper };
+        }
+
+        function calculate_difference(inputVariables) {
+            const { lower, upper } = findClosestPoints(Arr, inputVariables.Weight, inputVariables.Italic);
+
+            if (!lower || !upper) {
+                return null; // Or some default path value
+            }
+
+            // Calculate the interpolation fractions
+            const weightFraction = (inputVariables.Weight - lower.variables.Weight) / (upper.variables.Weight - lower.variables.Weight);
+            const italicFraction = (inputVariables.Italic - lower.variables.Italic) / (upper.variables.Italic - lower.variables.Italic);
+
+            // Interpolate the path values
+            const interpolatedPath = {
+                x: interpolate(lower.path.x, upper.path.x, weightFraction),
+                y: interpolate(lower.path.y, upper.path.y, weightFraction),
+                in_x: interpolate(lower.path.in_x, upper.path.in_x, weightFraction),
+                in_y: interpolate(lower.path.in_y, upper.path.in_y, weightFraction),
+                out_x: interpolate(lower.path.out_x, upper.path.out_x, weightFraction),
+                out_y: interpolate(lower.path.out_y, upper.path.out_y, weightFraction)
+            };
+
+            return interpolatedPath;
+
+        }
+
+        // Example usage
+        // console.log(calculate_difference({Weight: 20.5, Italic: 0.5}));
+
+
+
+
+
+
+        // console.log(text_package.text_variables)
+        // console.log(text_package.text_path_con)
+
+
+        let text_path_to_draw = structuredClone(text_package.text_path_con[0]);
+
+        // console.log(text_path_to_draw);
+
+
+
+// console.log(text_package.text_path_con)
+
+
+// console.log(text_package)
+
+
+        function findClosestPoints_1(arr, weight, italic) {
+
+            let lower = null;
+            let upper = null;
+
+
+            for (let i = 0; i < arr.text_variables.length; i++) {
+
+                        if (weight <= arr.text_variables[i].Weight && italic <= arr.text_variables[i].Italic) {
+                            if (upper == null || (arr.text_variables[i].Weight < upper.Weight || (arr.text_variables[i].Weight === upper.Weight && arr.text_variables[i].Italic < upper.Italic))) {
+                                upper = arr.text_path_con[i];
+                                console.log(i);
+                            }
+                        }
+
+                        if (weight >= arr.text_variables[i].Weight && italic >= arr.text_variables[i].Italic) {
+                            if (lower == null || (arr.text_variables[i].Weight > lower.Weight || (arr.text_variables[i].Weight === lower.Weight && arr.text_variables[i].Italic > lower.Italic))) {
+                                lower = arr.text_path_con[i];
+                                console.log(i);
+                            }
+                        }
+                    
+
+            }
+
+
+            return { lower, upper };
+
+        }
+
+
+
+
+        function findClosestPoints_2(arr, weight, italic) {
+
+
+            let upper_con = {
+                index: null,
+                variable: null,
+                path: null,
+            }
+
+            let lower_con = {
+                index: null,
+                variable: null,
+                path: null,
+            }
+
+            for (let i = 0; i < arr.text_variables.length; i++) {
+
+                    if (weight <= arr.text_variables[i].Weight && italic <= arr.text_variables[i].Italic) {
+                        if (upper_con.index == null || (arr.text_variables[i].Weight < upper_con.variable.Weight || (arr.text_variables[i].Weight === upper_con.variable.Weight && arr.text_variables[i].Italic < upper_con.variable.Italic))) {
+
+                            upper_con.index = i;
+                            upper_con.variable = arr.text_variables[i];
+                            upper_con.path = arr.text_path_con[i];
+
+                        }
+                    }
+
+                    if (weight >= arr.text_variables[i].Weight && italic >= arr.text_variables[i].Italic) {
+                        if (lower_con.index == null || (arr.text_variables[i].Weight > lower_con.variable.Weight || (arr.text_variables[i].Weight === lower_con.variable.Weight && arr.text_variables[i].Italic > lower_con.variable.Italic))) {
+
+                            lower_con.index = i;
+                            lower_con.variable = arr.text_variables[i];
+                            lower_con.path = arr.text_path_con[i];
+                            
+                        }
+                    }
+                
+
+            }
+        console.log(lower_con)
+        console.log(upper_con)
+
+            return { upper_con, lower_con };
+
+        }
+
+
+
+
+
+        function calc_test(inputVariables){
+
+            let text_path_to_draw = [];
+
+
+            for(let i = 0; i < text_package.text_path_con.length; i++){
+                text_path_to_draw[i] = [];
+                for(let j = 0; j < text_package.text_path_con[i].length; j++){
+                    text_path_to_draw[i][j] = {
+                        x: 0,
+                        y: 0,
+                        in_x: 0,
+                        in_y: 0,
+                        out_x: 0,
+                        out_y: 0
+                    };
+                }
+            }
+
+
+            const { lower, upper } = findClosestPoints_1(text_package, inputVariables.Weight, inputVariables.Italic);
+
+
+            const { lower_1, upper_1 } = findClosestPoints_2(text_package, inputVariables.Weight, inputVariables.Italic);
+
+
+            console.log(lower_1)
+
+            
+            if (!lower || !upper) {
+                return null; // Or some default path value
+            }
+
+            console.log(lower);
+            console.log(upper);
+
+
+
+            // Calculate the interpolation fractions
+            const weightFraction = (inputVariables.Weight - lower.variables.Weight) / (upper.variables.Weight - lower.variables.Weight);
+            const italicFraction = (inputVariables.Italic - lower.variables.Italic) / (upper.variables.Italic - lower.variables.Italic);
+
+            // Interpolate the path values
+            const interpolatedPath = {
+                x: interpolate_1(lower.path.x, upper.path.x, weightFraction),
+                y: interpolate_1(lower.path.y, upper.path.y, weightFraction),
+                in_x: interpolate_1(lower.path.in_x, upper.path.in_x, weightFraction),
+                in_y: interpolate_1(lower.path.in_y, upper.path.in_y, weightFraction),
+                out_x: interpolate_1(lower.path.out_x, upper.path.out_x, weightFraction),
+                out_y: interpolate_1(lower.path.out_y, upper.path.out_y, weightFraction)
+            };
+
+
+
+            return text_path_to_draw
+
+        }
+
+        calc_test({Weight: 250, Italic: 50});
+
+
+
+
+
+        function interpolate_1(value1, value2, fraction) {
+            return value1 + (value2 - value1) * fraction;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
             this.draw = function(variables){
 
-
-                if(variables.wdth == undefined){
-                    variables.wdth = assets.weight
-                }
 
                 
                 let total_width = sumArray(width_con);
@@ -224,7 +518,6 @@ console.log(text_package)
 
                 
 
-
                 // might be able to take out of draw function if scale don't change in motion
                 if(assets.sticky == 'bottom'){
                     for(let i = 0; i < text.length; i++){
@@ -238,38 +531,71 @@ console.log(text_package)
 
 
 
-                for(let i = 0; i < structure_con.length; i++){
-
-                    structure_con[i].point_0.x = structure_min_con[i].point_0.x + ((structure_max_con[i].point_0.x - structure_min_con[i].point_0.x) *  variables.wdth);
-                    structure_con[i].point_0.y = structure_min_con[i].point_0.y + ((structure_max_con[i].point_0.y - structure_min_con[i].point_0.y) *  variables.wdth);
-
-                    structure_con[i].point_1.x = structure_min_con[i].point_1.x + ((structure_max_con[i].point_1.x - structure_min_con[i].point_1.x) *  variables.wdth);
-                    structure_con[i].point_1.y = structure_min_con[i].point_1.y + ((structure_max_con[i].point_1.y - structure_min_con[i].point_1.y) *  variables.wdth);
-
-                    structure_con[i].point_2.x = structure_min_con[i].point_2.x + ((structure_max_con[i].point_2.x - structure_min_con[i].point_2.x) *  variables.wdth);
-                    structure_con[i].point_2.y = structure_min_con[i].point_2.y + ((structure_max_con[i].point_2.y - structure_min_con[i].point_2.y) *  variables.wdth);
-
-                    structure_con[i].point_3.x = structure_min_con[i].point_3.x + ((structure_max_con[i].point_3.x - structure_min_con[i].point_3.x) *  variables.wdth);
-                    structure_con[i].point_3.y = structure_min_con[i].point_3.y + ((structure_max_con[i].point_3.y - structure_min_con[i].point_3.y) *  variables.wdth);
+                // console.log(text_structure_to_draw)
 
 
-                    structure_con[i].base_0.x = structure_min_con[i].base_0.x + ((structure_max_con[i].base_0.x - structure_min_con[i].base_0.x) *  variables.wdth);
-                    structure_con[i].base_0.y = structure_min_con[i].base_0.y + ((structure_max_con[i].base_0.y - structure_min_con[i].base_0.y) *  variables.wdth);
+                for(let i = 0; i < text_structure_to_draw.length; i++){
 
-                    structure_con[i].base_1.x = structure_min_con[i].base_1.x + ((structure_max_con[i].base_1.x - structure_min_con[i].base_1.x) *  variables.wdth);
-                    structure_con[i].base_1.y = structure_min_con[i].base_1.y + ((structure_max_con[i].base_1.y - structure_min_con[i].base_1.y) *  variables.wdth);
-                    
+                    // text_structure_to_draw[i].point_0.x = structure_min_con[i].point_0.x + ((structure_max_con[i].point_0.x - structure_min_con[i].point_0.x) *  variables.wdth);
+                    // text_structure_to_draw[i].point_0.y = structure_min_con[i].point_0.y + ((structure_max_con[i].point_0.y - structure_min_con[i].point_0.y) *  variables.wdth);
+
+                    // text_structure_to_draw[i].point_1.x = structure_min_con[i].point_1.x + ((structure_max_con[i].point_1.x - structure_min_con[i].point_1.x) *  variables.wdth);
+                    // text_structure_to_draw[i].point_1.y = structure_min_con[i].point_1.y + ((structure_max_con[i].point_1.y - structure_min_con[i].point_1.y) *  variables.wdth);
+
+                    // text_structure_to_draw[i].point_2.x = structure_min_con[i].point_2.x + ((structure_max_con[i].point_2.x - structure_min_con[i].point_2.x) *  variables.wdth);
+                    // text_structure_to_draw[i].point_2.y = structure_min_con[i].point_2.y + ((structure_max_con[i].point_2.y - structure_min_con[i].point_2.y) *  variables.wdth);
+
+                    // text_structure_to_draw[i].point_3.x = structure_min_con[i].point_3.x + ((structure_max_con[i].point_3.x - structure_min_con[i].point_3.x) *  variables.wdth);
+                    // text_structure_to_draw[i].point_3.y = structure_min_con[i].point_3.y + ((structure_max_con[i].point_3.y - structure_min_con[i].point_3.y) *  variables.wdth);
+
+
+                    // text_structure_to_draw[i].base_0.x = structure_min_con[i].base_0.x + ((structure_max_con[i].base_0.x - structure_min_con[i].base_0.x) *  variables.wdth);
+                    // text_structure_to_draw[i].base_0.y = structure_min_con[i].base_0.y + ((structure_max_con[i].base_0.y - structure_min_con[i].base_0.y) *  variables.wdth);
+
+                    // text_structure_to_draw[i].base_1.x = structure_min_con[i].base_1.x + ((structure_max_con[i].base_1.x - structure_min_con[i].base_1.x) *  variables.wdth);
+                    // text_structure_to_draw[i].base_1.y = structure_min_con[i].base_1.y + ((structure_max_con[i].base_1.y - structure_min_con[i].base_1.y) *  variables.wdth);
+
                 }
+
+
+
+
+
+
+
+                // // might be able to take out of draw function if scale don't change in motion
+                // for(let i = 0; i < structure_con.length; i++){
+
+                //     structure_con[i].point_0.x = structure_min_con[i].point_0.x + ((structure_max_con[i].point_0.x - structure_min_con[i].point_0.x) *  variables.wdth);
+                //     structure_con[i].point_0.y = structure_min_con[i].point_0.y + ((structure_max_con[i].point_0.y - structure_min_con[i].point_0.y) *  variables.wdth);
+
+                //     structure_con[i].point_1.x = structure_min_con[i].point_1.x + ((structure_max_con[i].point_1.x - structure_min_con[i].point_1.x) *  variables.wdth);
+                //     structure_con[i].point_1.y = structure_min_con[i].point_1.y + ((structure_max_con[i].point_1.y - structure_min_con[i].point_1.y) *  variables.wdth);
+
+                //     structure_con[i].point_2.x = structure_min_con[i].point_2.x + ((structure_max_con[i].point_2.x - structure_min_con[i].point_2.x) *  variables.wdth);
+                //     structure_con[i].point_2.y = structure_min_con[i].point_2.y + ((structure_max_con[i].point_2.y - structure_min_con[i].point_2.y) *  variables.wdth);
+
+                //     structure_con[i].point_3.x = structure_min_con[i].point_3.x + ((structure_max_con[i].point_3.x - structure_min_con[i].point_3.x) *  variables.wdth);
+                //     structure_con[i].point_3.y = structure_min_con[i].point_3.y + ((structure_max_con[i].point_3.y - structure_min_con[i].point_3.y) *  variables.wdth);
+
+
+                //     structure_con[i].base_0.x = structure_min_con[i].base_0.x + ((structure_max_con[i].base_0.x - structure_min_con[i].base_0.x) *  variables.wdth);
+                //     structure_con[i].base_0.y = structure_min_con[i].base_0.y + ((structure_max_con[i].base_0.y - structure_min_con[i].base_0.y) *  variables.wdth);
+
+                //     structure_con[i].base_1.x = structure_min_con[i].base_1.x + ((structure_max_con[i].base_1.x - structure_min_con[i].base_1.x) *  variables.wdth);
+                //     structure_con[i].base_1.y = structure_min_con[i].base_1.y + ((structure_max_con[i].base_1.y - structure_min_con[i].base_1.y) *  variables.wdth);
+                    
+                // }
 
 
 
                 for(let i = 0; i < text.length; i++){
-                    letter_pos_con[i] = {x: structure_con[i].point_1.x - structure_con[i].point_0.x, y: structure_con[i].point_3.y/2};
+                    letter_pos_con[i] = {x: text_structure_to_draw[i].point_1.x - text_structure_to_draw[i].point_0.x, y: text_structure_to_draw[i].point_3.y/2};
                 }
 
                 
-                for(let i = 0; i < structure_con.length; i++){
-                    width_con[i] = (structure_con[i].point_1.x - structure_con[i].point_0.x) * assets.scale;
+                for(let i = 0; i < text.length; i++){
+                    width_con[i] = (text_structure_to_draw[i].point_1.x - text_structure_to_draw[i].point_0.x) * assets.scale;
                 }
 
 
@@ -287,15 +613,15 @@ console.log(text_package)
 
                 if(assets.structure_width !== 0){
 
-                    for(let i = 0; i < structure_con.length; i++){
+                    for(let i = 0; i < text.length; i++){
 
                         ctx.beginPath();
-                        ctx.moveTo((structure_con[i].point_0.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_con[i].point_0.y * assets.scale) + assets.position.y + pos_y_align[i]);
-                        ctx.lineTo((structure_con[i].point_1.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_con[i].point_1.y * assets.scale) + assets.position.y + pos_y_align[i]);
-                        ctx.lineTo((structure_con[i].point_2.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_con[i].point_2.y * assets.scale) + assets.position.y + pos_y_align[i]);
-                        ctx.lineTo((structure_con[i].point_3.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_con[i].point_3.y * assets.scale) + assets.position.y + pos_y_align[i]);
+                        ctx.moveTo((text_structure_to_draw[i].point_0.x * assets.scale) + updated_width_con[i] + text_alignment, (text_structure_to_draw[i].point_0.y * assets.scale) + assets.position.y + pos_y_align[i]);
+                        ctx.lineTo((text_structure_to_draw[i].point_1.x * assets.scale) + updated_width_con[i] + text_alignment, (text_structure_to_draw[i].point_1.y * assets.scale) + assets.position.y + pos_y_align[i]);
+                        ctx.lineTo((text_structure_to_draw[i].point_2.x * assets.scale) + updated_width_con[i] + text_alignment, (text_structure_to_draw[i].point_2.y * assets.scale) + assets.position.y + pos_y_align[i]);
+                        ctx.lineTo((text_structure_to_draw[i].point_3.x * assets.scale) + updated_width_con[i] + text_alignment, (text_structure_to_draw[i].point_3.y * assets.scale) + assets.position.y + pos_y_align[i]);
                         
-                        ctx.lineTo((structure_con[i].point_0.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_con[i].point_0.y * assets.scale) + assets.position.y + pos_y_align[i]);
+                        ctx.lineTo((text_structure_to_draw[i].point_0.x * assets.scale) + updated_width_con[i] + text_alignment, (text_structure_to_draw[i].point_0.y * assets.scale) + assets.position.y + pos_y_align[i]);
 
                         ctx.strokeStyle = assets.structure_style;
                         ctx.lineWidth = assets.structure_width;
@@ -305,8 +631,8 @@ console.log(text_package)
 
 
                         ctx.beginPath();
-                        ctx.moveTo((structure_con[i].base_0.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_con[i].base_0.y * assets.scale) + assets.position.y + pos_y_align[i]);
-                        ctx.lineTo((structure_con[i].base_1.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_con[i].base_1.y * assets.scale) + assets.position.y + pos_y_align[i]);
+                        ctx.moveTo((text_structure_to_draw[i].base_0.x * assets.scale) + updated_width_con[i] + text_alignment, (text_structure_to_draw[i].base_0.y * assets.scale) + assets.position.y + pos_y_align[i]);
+                        ctx.lineTo((text_structure_to_draw[i].base_1.x * assets.scale) + updated_width_con[i] + text_alignment, (text_structure_to_draw[i].base_1.y * assets.scale) + assets.position.y + pos_y_align[i]);
 
                         ctx.strokeStyle = assets.structure_style;
                         ctx.lineWidth = assets.structure_width;
@@ -319,17 +645,22 @@ console.log(text_package)
                 }
 
                 // ---------------------------------------------------------------------------------------------------------------------------------- //
+// console.log(text_path_to_draw[0][0][0])
+// console.log(text_package.text_path_con)
+// console.log(typeface_path_con)
 
-                for(let i = 0; i < letter_path_con.length; i++){
-                    for(let j = 0; j < letter_path_con[i].length; j++){
-                        for(let k = 0; k < letter_path_con[i][j].length; k++){
+console.log(text_package.text_path_con)
 
-                            letter_path_con[i][j][k].x = typeface_path_con[i][0][j][k].x + ((typeface_path_con[i][1][j][k].x - typeface_path_con[i][0][j][k].x) * variables.wdth);
-                            letter_path_con[i][j][k].y = typeface_path_con[i][0][j][k].y + ((typeface_path_con[i][1][j][k].y - typeface_path_con[i][0][j][k].y) * variables.wdth);
-                            letter_path_con[i][j][k].in_x = typeface_path_con[i][0][j][k].in_x + ((typeface_path_con[i][1][j][k].in_x - typeface_path_con[i][0][j][k].in_x) * variables.wdth);
-                            letter_path_con[i][j][k].in_y = typeface_path_con[i][0][j][k].in_y + ((typeface_path_con[i][1][j][k].in_y - typeface_path_con[i][0][j][k].in_y) * variables.wdth);
-                            letter_path_con[i][j][k].out_x = typeface_path_con[i][0][j][k].out_x + ((typeface_path_con[i][1][j][k].out_x - typeface_path_con[i][0][j][k].out_x) * variables.wdth);
-                            letter_path_con[i][j][k].out_y = typeface_path_con[i][0][j][k].out_y + ((typeface_path_con[i][1][j][k].out_y - typeface_path_con[i][0][j][k].out_y) * variables.wdth);
+                for(let i = 0; i < text.length; i++){
+                    for(let j = 0; j < text_path_to_draw[i].length; j++){
+                        for(let k = 0; k < text_path_to_draw[i][j].length; k++){
+
+                            text_path_to_draw[i][j][k].x = typeface_path_con[i][0][j][k].x + ((typeface_path_con[i][1][j][k].x - typeface_path_con[i][0][j][k].x) * variables.wdth);
+                            text_path_to_draw[i][j][k].y = typeface_path_con[i][0][j][k].y + ((typeface_path_con[i][1][j][k].y - typeface_path_con[i][0][j][k].y) * variables.wdth);
+                            text_path_to_draw[i][j][k].in_x = typeface_path_con[i][0][j][k].in_x + ((typeface_path_con[i][1][j][k].in_x - typeface_path_con[i][0][j][k].in_x) * variables.wdth);
+                            text_path_to_draw[i][j][k].in_y = typeface_path_con[i][0][j][k].in_y + ((typeface_path_con[i][1][j][k].in_y - typeface_path_con[i][0][j][k].in_y) * variables.wdth);
+                            text_path_to_draw[i][j][k].out_x = typeface_path_con[i][0][j][k].out_x + ((typeface_path_con[i][1][j][k].out_x - typeface_path_con[i][0][j][k].out_x) * variables.wdth);
+                            text_path_to_draw[i][j][k].out_y = typeface_path_con[i][0][j][k].out_y + ((typeface_path_con[i][1][j][k].out_y - typeface_path_con[i][0][j][k].out_y) * variables.wdth);
 
                         }
                     }
@@ -400,58 +731,54 @@ console.log(text_package)
 
 
 
-        let variblefont = [
-            {
+        let variblefont = [{
                 typeface: Neue_Haas_Grotesk_Display_Pro_15_XXThin,
                 variables: {Weight: 0, Italic: 0}
             },{
-                typeface: Neue_Haas_Grotesk_Display_Pro_15_XXThin,
+                typeface: Neue_Haas_Grotesk_Display_Pro_25_XThin,
                 variables: {Weight: 100, Italic: 0}
             },{
-                typeface: Neue_Haas_Grotesk_Display_Pro_25_XThin,
+                typeface: Neue_Haas_Grotesk_Display_Pro_35_Thin,
                 variables: {Weight: 200, Italic: 0}
             },{
-                typeface: Neue_Haas_Grotesk_Display_Pro_35_Thin,
+                typeface: Neue_Haas_Grotesk_Display_Pro_45_Light,
                 variables: {Weight: 300, Italic: 0}
             },{
-                typeface: Neue_Haas_Grotesk_Display_Pro_45_Light,
+                typeface: Neue_Haas_Grotesk_Display_Pro_55_Roman,
                 variables: {Weight: 400, Italic: 0}
             },{
-                typeface: Neue_Haas_Grotesk_Display_Pro_55_Roman,
+                typeface: Neue_Haas_Grotesk_Display_Pro_65_Medium,
                 variables: {Weight: 500, Italic: 0}
             },{
-                typeface: Neue_Haas_Grotesk_Display_Pro_65_Medium,
+                typeface: Neue_Haas_Grotesk_Display_Pro_75_Bold,
                 variables: {Weight: 600, Italic: 0}
             },{
-                typeface: Neue_Haas_Grotesk_Display_Pro_75_Bold,
-                variables: {Weight: 700, Italic: 0}
-            },{
                 typeface: Neue_Haas_Grotesk_Display_Pro_95_Black,
-                variables: {Weight: 800, Italic: 0}
+                variables: {Weight: 700, Italic: 0}
             },{
                 typeface: Neue_Haas_Grotesk_Display_Pro_16_XXThin_Italic,
                 variables: {Weight: 0, Italic: 100}
             },{
                 typeface: Neue_Haas_Grotesk_Display_Pro_26_XThin_Italic,
-                variables: {Weight: 0, Italic: 100}
+                variables: {Weight: 100, Italic: 100}
             },{
                 typeface: Neue_Haas_Grotesk_Display_Pro_36_Thin_Italic,
-                variables: {Weight: 0, Italic: 100}
+                variables: {Weight: 200, Italic: 100}
             },{
                 typeface: Neue_Haas_Grotesk_Display_Pro_46_Light_Italic,
-                variables: {Weight: 0, Italic: 100}
+                variables: {Weight: 300, Italic: 100}
             },{
                 typeface: Neue_Haas_Grotesk_Display_Pro_56_Roman_Italic,
-                variables: {Weight: 0, Italic: 100}
+                variables: {Weight: 400, Italic: 100}
             },{
                 typeface: Neue_Haas_Grotesk_Display_Pro_66_Medium_Italic,
-                variables: {Weight: 0, Italic: 100}
+                variables: {Weight: 500, Italic: 100}
             },{
                 typeface: Neue_Haas_Grotesk_Display_Pro_76_Bold_Italic,
-                variables: {Weight: 0, Italic: 100}
+                variables: {Weight: 600, Italic: 100}
             },{
                 typeface: Neue_Haas_Grotesk_Display_Pro_96_Black_Italic,
-                variables: {Weight: 0, Italic: 100}
+                variables: {Weight: 700, Italic: 100}
             }
         ];
 
@@ -475,7 +802,7 @@ console.log(text_package)
         };
 
 
-        let letter_test = new VariableFontOnCanvas(variblefont, assets, 'Hamburgefonstiv');
+        let letter_test = new VariableFontOnCanvas(variblefont, assets, 'HamburgefonstivHamburgefonstiv');
 
 
         
@@ -492,7 +819,7 @@ console.log(text_package)
 
             // letter_a_1.draw(0.5);
 
-            // letter_test.draw({Weight: 50, Italic: 0.5})
+            letter_test.draw({Weight: 50, Italic: 0.5})
 
 
             window.requestAnimationFrame(anim);
@@ -503,7 +830,28 @@ console.log(text_package)
         anim();
 
 
+// there is an array
+        // Arr = [
+        //     {path: {"x": 67,"y": 715,"in_x": 67,"in_y": 715,"out_x": 67,"out_y": 715}, variables: {Weight: 0, Italic: 0}},
+        //     {path: {"x": 47,"y": 215,"in_x": 13,"in_y": 992,"out_x": 44,"out_y": 56}, variables: {Weight: 10, Italic: 0}},
+        //     {path: {"x": 134,"y": 35,"in_x": 13,"in_y": 12,"out_x": 324,"out_y": 135}, variables: {Weight: 20, Italic: 0}},
+        //     {path: {"x": 54,"y": 2932,"in_x": 1235,"in_y": 12,"out_x": 74,"out_y": 5}, variables: {Weight: 30, Italic: 0}},
+        //     {path: {"x": 217,"y": 5435,"in_x": 54,"in_y": 87,"out_x": 544,"out_y": 15}, variables: {Weight: 40, Italic: 0}},
+        //     {path: {"x": 167,"y": 16,"in_x": 627,"in_y": 15,"out_x": 677,"out_y": 35}, variables: {Weight: 0, Italic: 0}},
+        //     {path: {"x": 427,"y": 385,"in_x": 3,"in_y": 792,"out_x": 34,"out_y": 86}, variables: {Weight: 10, Italic: 10}},
+        //     {path: {"x": 314,"y": 5,"in_x": 1,"in_y": 52,"out_x": 724,"out_y": 350}, variables: {Weight: 20, Italic: 20}},
+        //     {path: {"x": 4,"y": 22,"in_x": 15,"in_y": 126,"out_x": 4,"out_y": 50}, variables: {Weight: 30, Italic: 30}},
+        //     {path: {"x": 27,"y": 87,"in_x": 44,"in_y": 873,"out_x": 55,"out_y": 152}, variables: {Weight: 40, Italic: 40}}
+        // ]
 
+        // And I want to have a draw function that I havs the input of draw({Weight: 20.5, Italic: 0.5}), and the function returns the calculated path value
+        // simple version example like this
+        // Arr = [
+        //     {path: {"x": 0,"y": 0}, variables: {Weight: 0}},
+        //     {path: {"x": 50,"y": 50}, variables: {Weight: 5}},
+        //     {path: {"x": 100,"y": 100}, variables: {Weight: 10}},
+        // ]
+        // draw({Weight: 2.5}) returns path: {"x": 25,"y": 100}
 
 
     </script>
