@@ -60,67 +60,6 @@
 
 
 
-        // const Arr = [
-        //     {path: {"x": 67,"y": 715,"in_x": 67,"in_y": 715,"out_x": 67,"out_y": 715}, variables: {Weight: 0, Italic: 0}},
-        //     {path: {"x": 47,"y": 215,"in_x": 13,"in_y": 992,"out_x": 44,"out_y": 56}, variables: {Weight: 10, Italic: 0}},
-        //     {path: {"x": 134,"y": 35,"in_x": 13,"in_y": 12,"out_x": 324,"out_y": 135}, variables: {Weight: 20, Italic: 0}},
-        //     {path: {"x": 54,"y": 2932,"in_x": 1235,"in_y": 12,"out_x": 74,"out_y": 5}, variables: {Weight: 30, Italic: 0}},
-        //     {path: {"x": 217,"y": 5435,"in_x": 54,"in_y": 87,"out_x": 544,"out_y": 15}, variables: {Weight: 40, Italic: 0}},
-        //     {path: {"x": 167,"y": 16,"in_x": 627,"in_y": 15,"out_x": 677,"out_y": 35}, variables: {Weight: 0, Italic: 0}},
-        //     {path: {"x": 427,"y": 385,"in_x": 3,"in_y": 792,"out_x": 34,"out_y": 86}, variables: {Weight: 10, Italic: 10}},
-        //     {path: {"x": 314,"y": 5,"in_x": 1,"in_y": 52,"out_x": 724,"out_y": 350}, variables: {Weight: 20, Italic: 20}},
-        //     {path: {"x": 4,"y": 22,"in_x": 15,"in_y": 126,"out_x": 4,"out_y": 50}, variables: {Weight: 30, Italic: 30}},
-        //     {path: {"x": 27,"y": 87,"in_x": 44,"in_y": 873,"out_x": 55,"out_y": 152}, variables: {Weight: 40, Italic: 40}}
-        // ];
-
-        // function interpolate(value1, value2, fraction) {
-        //     return value1 + (value2 - value1) * fraction;
-        // }
-
-        // function draw(inputVariables) {
-        //     // Find the two closest points
-        //     let lower = null;
-        //     let upper = null;
-
-        //     for (let i = 0; i < Arr.length; i++) {
-        //         let current = Arr[i].variables;
-        //         if (current.Weight <= inputVariables.Weight && current.Italic <= inputVariables.Italic) {
-        //             if (!lower || (current.Weight > lower.variables.Weight || (current.Weight === lower.variables.Weight && current.Italic > lower.variables.Italic))) {
-        //                 lower = Arr[i];
-        //             }
-        //         }
-        //         if (current.Weight >= inputVariables.Weight && current.Italic >= inputVariables.Italic) {
-        //             if (!upper || (current.Weight < upper.variables.Weight || (current.Weight === upper.variables.Weight && current.Italic < upper.variables.Italic))) {
-        //                 upper = Arr[i];
-        //             }
-        //         }
-        //     }
-
-        //     if (!lower || !upper) {
-        //         return null; // Or some default path value
-        //     }
-
-        //     // Calculate the interpolation fractions
-        //     const weightFraction = (inputVariables.Weight - lower.variables.Weight) / (upper.variables.Weight - lower.variables.Weight);
-        //     const italicFraction = (inputVariables.Italic - lower.variables.Italic) / (upper.variables.Italic - lower.variables.Italic);
-
-        //     // Interpolate the path values
-        //     const interpolatedPath = {
-        //         x: interpolate(lower.path.x, upper.path.x, weightFraction),
-        //         y: interpolate(lower.path.y, upper.path.y, weightFraction),
-        //         in_x: interpolate(lower.path.in_x, upper.path.in_x, weightFraction),
-        //         in_y: interpolate(lower.path.in_y, upper.path.in_y, weightFraction),
-        //         out_x: interpolate(lower.path.out_x, upper.path.out_x, weightFraction),
-        //         out_y: interpolate(lower.path.out_y, upper.path.out_y, weightFraction)
-        //     };
-
-        //     return interpolatedPath;
-        // }
-
-        // // Example usage
-        // console.log(draw({Weight: 39.5, Italic: 0.5}));
-
-
 
         function VariableFontOnCanvas(variablefont, assets, text){
 
@@ -215,8 +154,6 @@
 
             let text_package = text_info();
 
-            // console.log(text_package)
-
 
 
 
@@ -239,125 +176,20 @@
             let pos_y_align = [];
 
 
-
-let Arr = text_package.text_path_con[0]
+            
 
 
 
         function interpolate(value1, value2, fraction) {
             return value1 + (value2 - value1) * fraction;
         }
-        
+
+
+
+
         function findClosestPoints(arr, weight, italic) {
-            let lower = null;
-            let upper = null;
 
-            for (let i = 0; i < arr.length; i++) {
-                for (let j = 0; j < arr[i].length; j++) {
-                    for (let k = 0; k < arr[i][j].length; k++) {
-                        let current = arr[i][j][k];
-                        if (current.variables.Weight <= weight && current.variables.Italic <= italic) {
-                            if (!lower || (current.variables.Weight > lower.variables.Weight || (current.variables.Weight === lower.variables.Weight && current.variables.Italic > lower.variables.Italic))) {
-                                lower = current;
-                            }
-                        }
-                        if (current.variables.Weight >= weight && current.variables.Italic >= italic) {
-                            if (!upper || (current.variables.Weight < upper.variables.Weight || (current.variables.Weight === upper.variables.Weight && current.variables.Italic < upper.variables.Italic))) {
-                                upper = current;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return { lower, upper };
-        }
-
-        function calculate_difference(inputVariables) {
-            const { lower, upper } = findClosestPoints(Arr, inputVariables.Weight, inputVariables.Italic);
-
-            if (!lower || !upper) {
-                return null; // Or some default path value
-            }
-
-            // Calculate the interpolation fractions
-            const weightFraction = (inputVariables.Weight - lower.variables.Weight) / (upper.variables.Weight - lower.variables.Weight);
-            const italicFraction = (inputVariables.Italic - lower.variables.Italic) / (upper.variables.Italic - lower.variables.Italic);
-
-            // Interpolate the path values
-            const interpolatedPath = {
-                x: interpolate(lower.path.x, upper.path.x, weightFraction),
-                y: interpolate(lower.path.y, upper.path.y, weightFraction),
-                in_x: interpolate(lower.path.in_x, upper.path.in_x, weightFraction),
-                in_y: interpolate(lower.path.in_y, upper.path.in_y, weightFraction),
-                out_x: interpolate(lower.path.out_x, upper.path.out_x, weightFraction),
-                out_y: interpolate(lower.path.out_y, upper.path.out_y, weightFraction)
-            };
-
-            return interpolatedPath;
-
-        }
-
-        // Example usage
-        // console.log(calculate_difference({Weight: 20.5, Italic: 0.5}));
-
-
-
-
-
-
-        // console.log(text_package.text_variables)
-        // console.log(text_package.text_path_con)
-
-
-        let text_path_to_draw = structuredClone(text_package.text_path_con[0]);
-
-        // console.log(text_path_to_draw);
-
-
-
-// console.log(text_package.text_path_con)
-
-
-// console.log(text_package)
-
-
-        function findClosestPoints_1(arr, weight, italic) {
-
-            let lower = null;
-            let upper = null;
-
-
-            for (let i = 0; i < arr.text_variables.length; i++) {
-
-                        if (weight <= arr.text_variables[i].Weight && italic <= arr.text_variables[i].Italic) {
-                            if (upper == null || (arr.text_variables[i].Weight < upper.Weight || (arr.text_variables[i].Weight === upper.Weight && arr.text_variables[i].Italic < upper.Italic))) {
-                                upper = arr.text_path_con[i];
-                                console.log(i);
-                            }
-                        }
-
-                        if (weight >= arr.text_variables[i].Weight && italic >= arr.text_variables[i].Italic) {
-                            if (lower == null || (arr.text_variables[i].Weight > lower.Weight || (arr.text_variables[i].Weight === lower.Weight && arr.text_variables[i].Italic > lower.Italic))) {
-                                lower = arr.text_path_con[i];
-                                console.log(i);
-                            }
-                        }
-                    
-
-            }
-
-
-            return { lower, upper };
-
-        }
-
-
-
-
-        function findClosestPoints_2(arr, weight, italic) {
-
-
+console.log(variablefont)
             let upper_con = {
                 index: null,
                 variable: null,
@@ -394,101 +226,123 @@ let Arr = text_package.text_path_con[0]
                 
 
             }
-        console.log(lower_con)
-        console.log(upper_con)
 
             return { upper_con, lower_con };
 
         }
 
 
+        function findClosestPoints_1(text_package, variable) {
+            let upper_con = {
+                index: null,
+                variable: null,
+                path: null,
+            };
+
+            let lower_con = {
+                index: null,
+                variable: null,
+                path: null,
+            };
+
+            for (let i = 0; i < text_package.text_variables.length; i++) {
+                let current = text_package.text_variables[i];
+                
+                // Assume initially that current variable is both upper and lower bound
+                let isUpper = true;
+                let isLower = true;
+
+                // Compare each key in the variable object
+                for (let key in variable) {
+                    if (current[key] < variable[key]) {
+                        isUpper = false;
+                    }
+
+                    if (current[key] > variable[key]) {
+                        isLower = false;
+                    }
+                }
+
+                if (isUpper) {
+                    if (upper_con.index == null || 
+                        Object.entries(variable).some(([key, value]) =>
+                            current[key] < upper_con.variable[key] ||
+                            (current[key] === upper_con.variable[key] && current[key] < upper_con.variable[key])
+                        )) {
+                        upper_con.index = i;
+                        upper_con.variable = current;
+                        upper_con.path = text_package.text_path_con[i];
+                    }
+                }
+
+                if (isLower) {
+                    if (lower_con.index == null || 
+                        Object.entries(variable).some(([key, value]) =>
+                            current[key] > lower_con.variable[key] ||
+                            (current[key] === lower_con.variable[key] && current[key] > lower_con.variable[key])
+                        )) {
+                        lower_con.index = i;
+                        lower_con.variable = current;
+                        lower_con.path = text_package.text_path_con[i];
+                    }
+                }
+            }
+
+            return { upper_con, lower_con };
+        }
 
 
 
         function calc_test(inputVariables){
 
-            let text_path_to_draw = [];
+
+            let lower_test = findClosestPoints_1(text_package, inputVariables);
+            
+console.log(lower_test);
+
+            let lower = findClosestPoints(text_package, inputVariables.Weight, inputVariables.Italic).lower_con;
+            let upper = findClosestPoints(text_package, inputVariables.Weight, inputVariables.Italic).upper_con;
 
 
-            for(let i = 0; i < text_package.text_path_con.length; i++){
-                text_path_to_draw[i] = [];
-                for(let j = 0; j < text_package.text_path_con[i].length; j++){
-                    text_path_to_draw[i][j] = {
-                        x: 0,
-                        y: 0,
-                        in_x: 0,
-                        in_y: 0,
-                        out_x: 0,
-                        out_y: 0
-                    };
+            if (!lower || !upper) {
+                return null; // Or some default path value
+            }
+        
+            
+
+            // Calculate the interpolation fractions
+            let weightFraction = (inputVariables.Weight - lower.variable.Weight) / (upper.variable.Weight - lower.variable.Weight);
+            let italicFraction = (inputVariables.Italic - lower.variable.Italic) / (upper.variable.Italic - lower.variable.Italic);
+console.log(lower, upper)
+
+            
+            let text_path_to_draw = structuredClone(lower.path);
+            
+
+
+            for(let i = 0; i < text_path_to_draw.length; i++){
+                for(let j = 0; j < text_path_to_draw[i].length; j++){
+                    for(let k = 0; k < text_path_to_draw[i][j].length; k++){
+                        text_path_to_draw[i][j][k] = {
+                            x: interpolate(lower.path[i][j][k].x, upper.path[i][j][k].x, weightFraction),
+                            y: interpolate(lower.path[i][j][k].y, upper.path[i][j][k].y, weightFraction),
+                            in_x: interpolate(lower.path[i][j][k].in_x, upper.path[i][j][k].in_x, weightFraction),
+                            in_y: interpolate(lower.path[i][j][k].in_y, upper.path[i][j][k].in_y, weightFraction),
+                            out_x: interpolate(lower.path[i][j][k].out_x, upper.path[i][j][k].out_x, weightFraction),
+                            out_y: interpolate(lower.path[i][j][k].out_y, upper.path[i][j][k].out_y, weightFraction)
+                        }
+                    }
                 }
             }
 
 
-            const { lower, upper } = findClosestPoints_1(text_package, inputVariables.Weight, inputVariables.Italic);
-
-
-            const { lower_1, upper_1 } = findClosestPoints_2(text_package, inputVariables.Weight, inputVariables.Italic);
-
-
-            console.log(lower_1)
-
-            
-            if (!lower || !upper) {
-                return null; // Or some default path value
-            }
-
-            console.log(lower);
-            console.log(upper);
-
-
-
-            // Calculate the interpolation fractions
-            const weightFraction = (inputVariables.Weight - lower.variables.Weight) / (upper.variables.Weight - lower.variables.Weight);
-            const italicFraction = (inputVariables.Italic - lower.variables.Italic) / (upper.variables.Italic - lower.variables.Italic);
-
-            // Interpolate the path values
-            const interpolatedPath = {
-                x: interpolate_1(lower.path.x, upper.path.x, weightFraction),
-                y: interpolate_1(lower.path.y, upper.path.y, weightFraction),
-                in_x: interpolate_1(lower.path.in_x, upper.path.in_x, weightFraction),
-                in_y: interpolate_1(lower.path.in_y, upper.path.in_y, weightFraction),
-                out_x: interpolate_1(lower.path.out_x, upper.path.out_x, weightFraction),
-                out_y: interpolate_1(lower.path.out_y, upper.path.out_y, weightFraction)
-            };
-
-
-
-            return text_path_to_draw
+            return {text_path_to_draw}
 
         }
 
-        calc_test({Weight: 250, Italic: 50});
+        
 
-
-
-
-
-        function interpolate_1(value1, value2, fraction) {
-            return value1 + (value2 - value1) * fraction;
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        calc_test({Weight: 50, Italic: 0.5})
 
 
 
@@ -649,7 +503,7 @@ let Arr = text_package.text_path_con[0]
 // console.log(text_package.text_path_con)
 // console.log(typeface_path_con)
 
-console.log(text_package.text_path_con)
+// console.log(text_package.text_path_con)
 
                 for(let i = 0; i < text.length; i++){
                     for(let j = 0; j < text_path_to_draw[i].length; j++){
