@@ -246,12 +246,12 @@
 
 
 
-        function findClosestPoints_2(text_package, input_variable) {
+        function findClosestPoints_3(text_package, input_variable) {
 
 
             let number_of_variables = (Object.entries(text_package.text_variables[0]).length);
             
-
+            
             let detector = structuredClone(text_package.text_variables);
 
             for (let i = 0; i < text_package.text_variables.length; i++) {
@@ -267,6 +267,111 @@
 
                 }
             }
+
+// console.log(detector)
+// console.log(Object.entries(text_package.text_variables[0])[0][1])
+
+
+
+            let test_collector = {lower: [], upper: []};
+
+            for(let i = 0; i < number_of_variables; i++){
+                test_collector.lower[i] = [];
+                test_collector.upper[i] = [];
+            }
+
+
+            let test = [];
+
+
+            let test_collector_1 = [];
+            for(let i = 0; i < number_of_variables; i++){
+                test_collector_1[i] = {lower: [], upper: []};;
+            }
+
+
+            let test_collector_2 = [];
+            for(let i = 0; i < number_of_variables; i++){
+                test_collector_2[i] = []
+            }
+            
+
+
+            for (let i = 0; i < text_package.text_variables.length; i++) {
+                for(let j = 0; j < number_of_variables; j++){
+
+                    if(Object.entries(input_variable)[j][1] > Object.entries(text_package.text_variables[i])[j][1] 
+                    && Object.entries(input_variable)[j][1] < Object.entries(text_package.text_variables[i + 1])[j][1]){
+
+                        test_collector.lower[j].push({
+                            index: i,
+                            variable: text_package.text_variables[i],
+                            path: text_package.text_path_con[i],
+                        })
+
+                        test_collector.upper[j].push({
+                            index: i + 1,
+                            variable: text_package.text_variables[i + 1],
+                            path: text_package.text_path_con[i + 1],
+                        })   
+
+
+                        test_collector_1[j].lower.push({
+                            index: i,
+                            variable: text_package.text_variables[i],
+                            path: text_package.text_path_con[i],
+                        })
+
+                        test_collector_1[j].upper.push({
+                            index: i + 1,
+                            variable: text_package.text_variables[i + 1],
+                            path: text_package.text_path_con[i + 1],
+                        })   
+
+
+
+                        test_collector_2[j].push({
+                            index: i,
+                            variable: text_package.text_variables[i],
+                            path: text_package.text_path_con[i],
+                        })
+
+                        test_collector_2[j].push({
+                            index: i + 1,
+                            variable: text_package.text_variables[i + 1],
+                            path: text_package.text_path_con[i + 1],
+                        })   
+                    }
+
+                }
+            }
+
+
+            let element_length_finder = [];
+
+            for(let i = 0; i < number_of_variables; i++){
+                element_length_finder.push(test_collector_1[i].lower.length + test_collector_1[i].upper.length)
+            }
+
+                        
+            let mainIndex = element_length_finder.reduce((maxIndex, currentValue, currentIndex, arr) => {
+                return currentValue > arr[maxIndex] ? currentIndex : maxIndex;
+            }, 0);
+
+
+            console.log(test_collector_1[mainIndex])
+            console.log(test_collector_2[mainIndex])
+
+
+
+
+
+            let test_mainAxisIndex = findLongestAndShortestSubArray(test_collector.lower).longestIndex;
+            let test_notmainAxisIndex = findLongestAndShortestSubArray(test_collector.lower).shortestIndex;
+
+
+
+
 
 
             let axis_min_max_val_con = [];
@@ -285,7 +390,7 @@
             
             
             let axis_min_max_detector = [];
-
+    // console.log(detector)
 
             for (let i = 0; i < text_package.text_variables.length; i++) {
                 for(let j = 0; j < number_of_variables; j++){
@@ -302,14 +407,13 @@
                             variable: text_package.text_variables[i + 1],
                             path: text_package.text_path_con[i + 1],
                         })   
-
-                        console.log(i, i+1, j)
+console.log(j, i)
                         console.log(text_package.text_variables[i])
 
                     }
                 }
             }
-
+console.log(collector)
 
             function findLongestAndShortestSubArray(arr) {
                 let maxLength = 0;
@@ -381,14 +485,18 @@
             };
 
             
-
+console.log(axis.lower)
             for(let i = 0; i < axis; i++){
-                axis.max
+                axis
             }
 
             console.log(axis)
             console.log(axis_min_max_val_con)
 
+            let vendingmachine = {
+                machine_1: {min:{}, max:{}},
+                machine_2: {}
+            }
 
             
             console.log(collector.lower)
@@ -397,10 +505,167 @@
 
 
 
+            //if theres 3 variable axis
+            //findMinandMaxVal should change
+let test_input_val = {Weight: 350, Italic: 60, Width: 50}
+
+let ideal_result = [
+    {Weight: 300, Italic: 0, Width: 0}, {Weight: 300, Italic: 100, Width: 0}, {Weight: 300, Italic: 0, Width: 100}, {Weight: 300, Italic: 100, Width: 100},
+    {Weight: 400, Italic: 0, Width: 0}, {Weight: 400, Italic: 100, Width: 0}, {Weight: 400, Italic: 0, Width: 100}, {Weight: 400, Italic: 100, Width: 100},
+]
+
+
+
+let collector_test = {
+    lower: [
+        [{variable:{Weight: 300, Italic: 0, Width: 0}}, {variable:{Weight: 300, Italic: 0, Width: 100}}, {variable:{Weight: 300, Italic: 100, Width: 0}}, {variable:{Weight: 300, Italic: 100, Width: 100}}],
+        [{variable:{Weight: 700, Italic: 0, Width: 0}}, {variable:{Weight: 700, Italic: 0, Width: 100}}],
+        [{variable:{Weight: 700, Italic: 0, Width: 0}}, {variable:{Weight: 700, Italic: 100, Width: 0}}]
+    ], 
+    upper: [
+        [{variable:{Weight: 400, Italic: 0, Width: 0}}, {variable:{Weight: 400, Italic: 0, Width: 100}}, {variable:{Weight: 400, Italic: 100, Width: 0}}, {variable:{Weight: 400, Italic: 100, Width: 100}}],
+        [{variable:{Weight: 0, Italic: 100, Width: 0}}, {variable:{Weight: 0, Italic: 100, Width: 100}}],
+        [{variable:{Weight: 0, Italic: 0, Width: 100}}, {variable:{Weight: 0, Italic: 100, Width: 100}}]
+    ]
+}
+
+console.log(findMinAndMaxVal(collector_test.lower[0]))
+console.log(findMinAndMaxVal(collector_test.lower[1]))
+console.log(collector)
 
             // [{min: 300, max:500}, {min:0, max:100}]
 
             return axis;
+
+        }
+
+
+
+
+        function findClosestPoints_2(text_package, input_variable) {
+
+
+            let number_of_variables = (Object.entries(text_package.text_variables[0]).length);
+
+            let axis_filter = [];
+            let fraction_properties = [];
+            let axis_val = [];
+            let element_length_finder = [];
+
+            for(let i = 0; i < number_of_variables; i++){
+                axis_filter[i] = [];
+                fraction_properties[i] = {min:null, max:null};
+                axis_val[i] = [];
+            }
+            
+            
+            for (let i = 0; i < text_package.text_variables.length; i++) {
+                for(let j = 0; j < number_of_variables; j++){
+
+                    if(Object.entries(input_variable)[j][1] > Object.entries(text_package.text_variables[i])[j][1] 
+                    && Object.entries(input_variable)[j][1] < Object.entries(text_package.text_variables[i + 1])[j][1]){
+
+                        axis_filter[j].push({
+                            index: i,
+                            variable: text_package.text_variables[i],
+                            path: text_package.text_path_con[i],
+                        })
+
+
+                        axis_filter[j].push({
+                            index: i + 1,
+                            variable: text_package.text_variables[i + 1],
+                            path: text_package.text_path_con[i + 1],
+                        })   
+
+                    }
+
+                }
+            }
+
+
+
+            for(let i = 0; i < number_of_variables; i++){
+                element_length_finder.push(axis_filter[i].length)
+            }
+
+
+            let mainIndex = element_length_finder.reduce((maxIndex, currentValue, currentIndex, arr) => {
+                return currentValue > arr[maxIndex] ? currentIndex : maxIndex;
+            }, 0);
+
+
+            let axis = axis_filter[mainIndex];
+
+
+
+            for(let i = 0; i < axis_filter[mainIndex].length; i++){
+                for(let j = 0; j < number_of_variables; j++){
+                    axis_val[j].push(Object.entries(axis_filter[mainIndex][i].variable)[j][1])
+                }
+            }
+
+            for(let i = 0; i < number_of_variables; i++){
+                fraction_properties[i].min = Math.min(...axis_val[i]);
+                fraction_properties[i].max = Math.max(...axis_val[i]);
+            }
+
+
+
+            function groupByKeysToArray(arr, keys) {
+                let map = new Map();
+
+                arr.forEach(item => {
+                    let group = map;
+                    keys.forEach((key, index) => {
+                        const value = item.variable[key];
+                        if (index === keys.length - 1) {
+                            if (!group.has(value)) {
+                                group.set(value, []);
+                            }
+                            group.get(value).push(item);
+                        } else {
+                            if (!group.has(value)) {
+                                group.set(value, new Map());
+                            }
+                            group = group.get(value);
+                        }
+                    });
+                });
+
+                function mapToArray(map) {
+                    let result = [];
+                    map.forEach((value, key) => {
+                        if (value instanceof Map) {
+                            result = result.concat(mapToArray(value));
+                        } else {
+                            result.push(value);
+                        }
+                    });
+                    return result;
+                }
+
+                return mapToArray(map);
+            }
+
+
+
+            let filter = [];
+
+            for(let i = 0; i < number_of_variables - 1; i++){
+                filter.push(Object.entries(axis[0].variable)[i][0])
+            }
+
+
+            let grouped = groupByKeysToArray(axis, [filter]);
+
+
+
+
+
+
+
+            return {axis, fraction_properties};
 
         }
 
@@ -445,21 +710,50 @@
 
 
 
-            let test_1 = findClosestPoints_2(text_package, inputVariables);
+            let closet_axis = findClosestPoints_2(text_package, inputVariables)
 
             // console.log(test_1.lower.min.variable);
-            // console.log(test_1.upper);
+            console.log(closet_axis);
 
 
+
+            console.log(inputVariables)
 
 
             let fraction_con_1 = [];
 
             for (let i = 0; i < Object.entries(inputVariables).length; i++){
-                fraction_con_1[i] = (Object.entries(inputVariables)[i][1] - Object.entries(test_1.lower.min.variable)[i][1]) / (Object.entries(test_1.lower.max.variable)[i][1] - Object.entries(test_1.lower.min.variable)[i][1]);
+                fraction_con_1[i] = (Object.entries(inputVariables)[i][1] - closet_axis.fraction_properties[i].min) / (closet_axis.fraction_properties[i].max - closet_axis.fraction_properties[i].min);
             }
 
-            // console.log(fraction_con_1)
+            console.log(fraction_con_1)
+
+
+
+            let text_path_to_draw_1 = structuredClone(closet_axis.axis[0].path);
+
+console.log(text_path_to_draw_1)            
+
+            for(let x = 0; x < text_path_to_draw_1.length; x++){
+                for (let i = 0; i < text_path_to_draw_1[x].length; i++) {
+                    for (let j = 0; j < text_path_to_draw_1[x][i].length; j++) {
+                        for (let k = 0; k < text_path_to_draw_1[x][i][j].length; k++) {
+                        
+                            text_path_to_draw_1[x][i][j][k].x = interpolate(lower.path[i][j][k].x, upper.path[i][j][k].x, fraction_con[x]);
+                            text_path_to_draw_1[x][i][j][k].y = interpolate(lower.path[i][j][k].y - variablefont[0].typeface.parameters.ascender, upper.path[i][j][k].y - variablefont[0].typeface.parameters.ascender, fraction_con[x]);
+                            text_path_to_draw_1[x][i][j][k].in_x = interpolate(lower.path[i][j][k].in_x, upper.path[i][j][k].in_x, fraction_con[x]);
+                            text_path_to_draw_1[x][i][j][k].in_y = interpolate(lower.path[i][j][k].in_y - variablefont[0].typeface.parameters.ascender, upper.path[i][j][k].in_y - variablefont[0].typeface.parameters.ascender, fraction_con[x]);
+                            text_path_to_draw_1[x][i][j][k].out_x = interpolate(lower.path[i][j][k].out_x, upper.path[i][j][k].out_x, fraction_con[x]);
+                            text_path_to_draw_1[x][i][j][k].out_y = interpolate(lower.path[i][j][k].out_y - variablefont[0].typeface.parameters.ascender, upper.path[i][j][k].out_y - variablefont[0].typeface.parameters.ascender, fraction_con[x]);
+                        }
+
+                    }
+                }
+            }
+
+
+
+
 
             let fraction_con = [];
 
@@ -467,16 +761,6 @@
                 fraction_con[i] = (Object.entries(inputVariables)[i][1] - Object.entries(lower.variable)[i][1]) / (Object.entries(upper.variable)[i][1] - Object.entries(lower.variable)[i][1]);
             }
 
-
-            // console.log(fraction_con)
-
-            let fraction_to_draw = 0;
-            
-            for (let i = 0; i < Object.entries(inputVariables).length; i++){
-                if (fraction_con[i] < fraction_con[i+1]){
-                    fraction_to_draw = fraction_con[i+1];   
-                }
-            }
 
 
             let text_path_to_draw = structuredClone(lower.path);
@@ -489,10 +773,7 @@
                 test[i] = structuredClone(lower.path);
             }
 
-            // console.log(test)
 
-            // let text_path_to_draw = structuredClone(lower.path);
-            // let text_path_to_draw = structuredClone(lower.path);
 
             let test_test = structuredClone(lower.path);
 
@@ -532,7 +813,7 @@
                 }
             }
 
-// console.log(test)
+
 
 
 asdf
@@ -584,6 +865,7 @@ asdf
 
 
             return { text_path_to_draw, structure_path_to_draw };
+
 
         }
 
