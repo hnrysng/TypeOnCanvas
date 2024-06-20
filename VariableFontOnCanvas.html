@@ -658,8 +658,16 @@ console.log(collector)
 
 
 
-
             let groupedaxis = groupByKeysToArray(axis, [filter]);
+
+
+
+            
+            let axis_calc_order = [];
+
+            for(let i = number_of_variables - 1; i >= 0; i--){
+                axis_calc_order.push(Object.entries(axis[0].variable)[i][0])
+            }
 
 
 
@@ -675,7 +683,7 @@ console.log(collector)
             ];
 
 
-            return {axis, groupedaxis, fraction_properties};
+            return {axis, groupedaxis, fraction_properties, axis_calc_order};
 
         }
 
@@ -732,12 +740,34 @@ console.log(collector)
 
 
 
+            let fraction_con_2 = structuredClone(inputVariables);
+
+            for (let i = 0; i < Object.entries(inputVariables).length; i++){
+                fraction_con_2[Object.keys(fraction_con_2)[i]] = (Object.entries(inputVariables)[i][1] - closet_axis.fraction_properties[i].min) / (closet_axis.fraction_properties[i].max - closet_axis.fraction_properties[i].min);
+            }
+
+
+            function checkArrayLength(arr) {
+                if (arr.length % 2 === 0) {
+                    return arr.length / 2;
+                }
+                return -1; // or any other value to indicate the length is not a multiple of 2
+            }
+
+            
+console.log(checkArrayLength(fraction_con_1))
+
             console.log(fraction_con_1)
             console.log(closet_axis)
             console.log(closet_axis.groupedaxis);
             console.log(closet_axis.groupedaxis.length);
 
 
+            console.log(closet_axis.axis_calc_order)
+console.log(fraction_con_2[closet_axis.axis_calc_order[1]])
+console.log(Object.keys(fraction_con_2)[0])
+console.log(fraction_con_2[Object.keys(fraction_con_2)[0]])
+console.log(inputVariables)
 
             let testest_con = [];
 
@@ -746,6 +776,7 @@ console.log(collector)
             }
 
 
+console.log(testest_con)
 
             if(testest_con.length !== 1){
                 
@@ -757,12 +788,12 @@ console.log(collector)
                     for(let k = 0; k < closet_axis.groupedaxis[i][0].path[j].length; k++){
                         for(let l = 0; l < closet_axis.groupedaxis[i][0].path[j][k].length; l++){
 
-                            testest_con[i][j][k][l].x = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].x, closet_axis.groupedaxis[i][1].path[j][k][l].x, fraction_con_1[1]);
-                            testest_con[i][j][k][l].y = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].y, closet_axis.groupedaxis[i][1].path[j][k][l].y, fraction_con_1[1]);
-                            testest_con[i][j][k][l].in_x = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].in_x, closet_axis.groupedaxis[i][1].path[j][k][l].in_x, fraction_con_1[1]);
-                            testest_con[i][j][k][l].in_y = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].in_y, closet_axis.groupedaxis[i][1].path[j][k][l].in_y, fraction_con_1[1]);
-                            testest_con[i][j][k][l].out_x = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].out_x, closet_axis.groupedaxis[i][1].path[j][k][l].out_x, fraction_con_1[1]);
-                            testest_con[i][j][k][l].out_y = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].out_y, closet_axis.groupedaxis[i][1].path[j][k][l].out_y, fraction_con_1[1]);
+                            testest_con[i][j][k][l].x = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].x, closet_axis.groupedaxis[i][1].path[j][k][l].x, fraction_con_2[closet_axis.axis_calc_order[0]]);
+                            testest_con[i][j][k][l].y = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].y, closet_axis.groupedaxis[i][1].path[j][k][l].y, fraction_con_2[closet_axis.axis_calc_order[0]]);
+                            testest_con[i][j][k][l].in_x = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].in_x, closet_axis.groupedaxis[i][1].path[j][k][l].in_x, fraction_con_2[closet_axis.axis_calc_order[0]]);
+                            testest_con[i][j][k][l].in_y = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].in_y, closet_axis.groupedaxis[i][1].path[j][k][l].in_y, fraction_con_2[closet_axis.axis_calc_order[0]]);
+                            testest_con[i][j][k][l].out_x = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].out_x, closet_axis.groupedaxis[i][1].path[j][k][l].out_x, fraction_con_2[closet_axis.axis_calc_order[0]]);
+                            testest_con[i][j][k][l].out_y = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].out_y, closet_axis.groupedaxis[i][1].path[j][k][l].out_y, fraction_con_2[closet_axis.axis_calc_order[0]]);
 
                             
                         }
@@ -772,6 +803,8 @@ console.log(collector)
             
             
             
+console.log(testest_con)
+
 
 
             let tes_1 = {x:null, y:null, in_x:null, in_y:null, out_x:null, out_y:null}
@@ -827,8 +860,8 @@ console.log(collector)
                             text_path_to_draw_1[x][i][j][k].in_y = interpolate(lower.path[i][j][k].in_y - variablefont[0].typeface.parameters.ascender, upper.path[i][j][k].in_y - variablefont[0].typeface.parameters.ascender, fraction_con[x]);
                             text_path_to_draw_1[x][i][j][k].out_x = interpolate(lower.path[i][j][k].out_x, upper.path[i][j][k].out_x, fraction_con[x]);
                             text_path_to_draw_1[x][i][j][k].out_y = interpolate(lower.path[i][j][k].out_y - variablefont[0].typeface.parameters.ascender, upper.path[i][j][k].out_y - variablefont[0].typeface.parameters.ascender, fraction_con[x]);
-                        }
 
+                        }
                     }
                 }
             }
