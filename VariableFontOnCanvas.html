@@ -732,13 +732,6 @@ console.log(collector)
 
 
 
-            let fraction_con_1 = [];
-
-            for (let i = 0; i < Object.entries(inputVariables).length; i++){
-                fraction_con_1[i] = (Object.entries(inputVariables)[i][1] - closet_axis.fraction_properties[i].min) / (closet_axis.fraction_properties[i].max - closet_axis.fraction_properties[i].min);
-            }
-
-
 
             let fraction_con_2 = structuredClone(inputVariables);
 
@@ -746,42 +739,71 @@ console.log(collector)
                 fraction_con_2[Object.keys(fraction_con_2)[i]] = (Object.entries(inputVariables)[i][1] - closet_axis.fraction_properties[i].min) / (closet_axis.fraction_properties[i].max - closet_axis.fraction_properties[i].min);
             }
 
-
-            function checkArrayLength(arr) {
-                if (arr.length % 2 === 0) {
-                    return arr.length / 2;
+            
+            
+            function get_num_of_array_to_calc_path(num_of_axis) {
+                let result = [];
+                while (num_of_axis >= 1) {
+                    result.push(num_of_axis);
+                    num_of_axis = Math.floor(num_of_axis / 2);
                 }
-                return -1; // or any other value to indicate the length is not a multiple of 2
+                return result;
             }
 
+            let num_of_array_to_calc_path = get_num_of_array_to_calc_path(closet_axis.groupedaxis.length);
+                                    
+            function make_placeholder_arrays_to_calc_path(num_of_array_to_calc_path) {
+                return num_of_array_to_calc_path.map(size => {
+                    let nestedArray = [];
+                    for (let i = 0; i < size; i++) {
+                        nestedArray.push(structuredClone(closet_axis.axis[0].path));
+                    }
+                    return nestedArray;
+                });
+            }
+
+
+            let placeholder_arrays_to_calc_path = make_placeholder_arrays_to_calc_path(num_of_array_to_calc_path)
             
-console.log(checkArrayLength(fraction_con_1))
-
-            console.log(fraction_con_1)
-            console.log(closet_axis)
-            console.log(closet_axis.groupedaxis);
-            console.log(closet_axis.groupedaxis.length);
 
 
-            console.log(closet_axis.axis_calc_order)
-console.log(fraction_con_2[closet_axis.axis_calc_order[1]])
-console.log(Object.keys(fraction_con_2)[0])
-console.log(fraction_con_2[Object.keys(fraction_con_2)[0]])
-console.log(inputVariables)
+            console.log(placeholder_arrays_to_calc_path)
+            console.log(closet_axis.groupedaxis)
+            console.log(placeholder_arrays_to_calc_path[0][0][0][0][0].x)
+            console.log(closet_axis.groupedaxis[0][0].path[0][0][0].x)
+            console.log(closet_axis.groupedaxis[0][0])
+
+
+
+            for(let n = 0; n < placeholder_arrays_to_calc_path.length; n++){
+                for(let a = 0; a < placeholder_arrays_to_calc_path[n].length; a++){
+
+                    for(let i = 0; i < closet_axis.groupedaxis.length; i++){
+                        for(let j = 0; j < closet_axis.groupedaxis[i].length; j++){
+                            for(let k = 0; k < closet_axis.groupedaxis[i][0].path[j].length; k++){
+                                for(let l = 0; l < closet_axis.groupedaxis[i][0].path[j][k].length; l++){
+                                    placeholder_arrays_to_calc_path[n][a][j][k][l].x = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].x, closet_axis.groupedaxis[i][1].path[j][k][l].x, fraction_con_2[closet_axis.axis_calc_order[n]]);
+                                    placeholder_arrays_to_calc_path[n][a][j][k][l].y = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].y, closet_axis.groupedaxis[i][1].path[j][k][l].y, fraction_con_2[closet_axis.axis_calc_order[n]]);
+                                    placeholder_arrays_to_calc_path[n][a][j][k][l].in_x = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].in_x, closet_axis.groupedaxis[i][1].path[j][k][l].in_x, fraction_con_2[closet_axis.axis_calc_order[n]]);
+                                    placeholder_arrays_to_calc_path[n][a][j][k][l].in_y = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].in_y, closet_axis.groupedaxis[i][1].path[j][k][l].in_y, fraction_con_2[closet_axis.axis_calc_order[n]]);
+                                    placeholder_arrays_to_calc_path[n][a][j][k][l].out_x = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].out_x, closet_axis.groupedaxis[i][1].path[j][k][l].out_x, fraction_con_2[closet_axis.axis_calc_order[n]]);
+                                    placeholder_arrays_to_calc_path[n][a][j][k][l].out_y = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].out_y, closet_axis.groupedaxis[i][1].path[j][k][l].out_y, fraction_con_2[closet_axis.axis_calc_order[n]]);
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+            
+            console.log(placeholder_arrays_to_calc_path)
 
             let testest_con = [];
 
             for(let i = 0; i < closet_axis.groupedaxis.length; i++){
                 testest_con[i] = structuredClone(closet_axis.axis[0].path);
             }
-
-
-console.log(testest_con)
-
-            if(testest_con.length !== 1){
-                
-            }
-
+console.log(testest_con[0][0][0][0])
 
             for(let i = 0; i < closet_axis.groupedaxis.length; i++){
                 for(let j = 0; j < closet_axis.groupedaxis[i].length; j++){
@@ -800,42 +822,40 @@ console.log(testest_con)
                     }
                 }
             }
+
+
+            let testest_con_1 = structuredClone(closet_axis.axis[0].path);
             
+            // console.log(testest_con)
+
             
+            for(let j = 0; j < testest_con[0].length; j++){
+                for(let k = 0; k < testest_con[0][j].length; k++){
+                    for(let l = 0; l < testest_con[0][j][k].length; l++){
+
+                        testest_con_1[j][k][l].x = interpolate(testest_con[0][j][k][l].x, testest_con[1][j][k][l].x, fraction_con_2[closet_axis.axis_calc_order[1]]);
+                        testest_con_1[j][k][l].y = interpolate(testest_con[0][j][k][l].y, testest_con[1][j][k][l].y, fraction_con_2[closet_axis.axis_calc_order[1]]);
+                        testest_con_1[j][k][l].in_x = interpolate(testest_con[0][j][k][l].in_x, testest_con[1][j][k][l].in_x, fraction_con_2[closet_axis.axis_calc_order[1]]);
+                        testest_con_1[j][k][l].in_y = interpolate(testest_con[0][j][k][l].in_y, testest_con[1][j][k][l].in_y, fraction_con_2[closet_axis.axis_calc_order[1]]);
+                        testest_con_1[j][k][l].out_x = interpolate(testest_con[0][j][k][l].out_x, testest_con[1][j][k][l].out_x, fraction_con_2[closet_axis.axis_calc_order[1]]);
+                        testest_con_1[j][k][l].out_y = interpolate(testest_con[0][j][k][l].out_y, testest_con[1][j][k][l].out_y, fraction_con_2[closet_axis.axis_calc_order[1]]);
+
+                    }
+                }
+            }
             
-console.log(testest_con)
+
+            // console.log(testest_con_1)
+            
+            // console.log(closet_axis.groupedaxis)
 
 
 
-            let tes_1 = {x:null, y:null, in_x:null, in_y:null, out_x:null, out_y:null}
-
-            tes_1.x = interpolate(closet_axis.groupedaxis[0][0].path[1][0][0].x, closet_axis.groupedaxis[0][1].path[1][0][0].x, fraction_con_1[1]);
-            tes_1.y = interpolate(closet_axis.groupedaxis[0][0].path[1][0][0].y, closet_axis.groupedaxis[0][1].path[1][0][0].y, fraction_con_1[1]);
-            tes_1.in_x = interpolate(closet_axis.groupedaxis[0][0].path[1][0][0].in_x, closet_axis.groupedaxis[0][1].path[1][0][0].in_x, fraction_con_1[1]);
-            tes_1.in_y = interpolate(closet_axis.groupedaxis[0][0].path[1][0][0].in_y, closet_axis.groupedaxis[0][1].path[1][0][0].in_y, fraction_con_1[1]);
-            tes_1.out_x = interpolate(closet_axis.groupedaxis[0][0].path[1][0][0].out_x, closet_axis.groupedaxis[0][1].path[1][0][0].out_x, fraction_con_1[1]);
-            tes_1.out_y = interpolate(closet_axis.groupedaxis[0][0].path[1][0][0].out_y, closet_axis.groupedaxis[0][1].path[1][0][0].out_y, fraction_con_1[1]);
-
-
-            let tes_2 = {x:null, y:null, in_x:null, in_y:null, out_x:null, out_y:null}
-
-            tes_2.x = interpolate(closet_axis.groupedaxis[1][0].path[1][0][0].x, closet_axis.groupedaxis[1][1].path[1][0][0].x, fraction_con_1[1]);
-            tes_2.y = interpolate(closet_axis.groupedaxis[1][0].path[1][0][0].y, closet_axis.groupedaxis[1][1].path[1][0][0].y, fraction_con_1[1]);
-            tes_2.in_x = interpolate(closet_axis.groupedaxis[1][0].path[1][0][0].in_x, closet_axis.groupedaxis[1][1].path[1][0][0].in_x, fraction_con_1[1]);
-            tes_2.in_y = interpolate(closet_axis.groupedaxis[1][0].path[1][0][0].in_y, closet_axis.groupedaxis[1][1].path[1][0][0].in_y, fraction_con_1[1]);
-            tes_2.out_x = interpolate(closet_axis.groupedaxis[1][0].path[1][0][0].out_x, closet_axis.groupedaxis[1][1].path[1][0][0].out_x, fraction_con_1[1]);
-            tes_2.out_y = interpolate(closet_axis.groupedaxis[1][0].path[1][0][0].out_y, closet_axis.groupedaxis[1][1].path[1][0][0].out_y, fraction_con_1[1]);
 
 
 
-            let tes_3 = {x:null, y:null, in_x:null, in_y:null, out_x:null, out_y:null}
 
-            tes_3.x = interpolate(tes_1.x, tes_2.x, fraction_con_1[0])
-            tes_3.y = interpolate(tes_1.y, tes_2.y, fraction_con_1[0])
-            tes_3.in_x = interpolate(tes_1.in_x, tes_2.in_x, fraction_con_1[0])
-            tes_3.in_y = interpolate(tes_1.in_y, tes_2.in_y, fraction_con_1[0])
-            tes_3.out_x = interpolate(tes_1.out_x, tes_2.out_x, fraction_con_1[0])
-            tes_3.out_y = interpolate(tes_1.out_y, tes_2.out_y, fraction_con_1[0])
+
 
 
 
