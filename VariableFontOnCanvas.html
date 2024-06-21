@@ -246,301 +246,6 @@
 
 
 
-        function findClosestPoints_3(text_package, input_variable) {
-
-
-            let number_of_variables = (Object.entries(text_package.text_variables[0]).length);
-            
-            
-            let detector = structuredClone(text_package.text_variables);
-
-            for (let i = 0; i < text_package.text_variables.length; i++) {
-                for(let j = 0; j < number_of_variables; j++){
-
-                    if(Object.entries(input_variable)[j][1] > Object.entries(text_package.text_variables[i])[j][1]){
-                        detector[i][Object.keys(detector[i])[j]] = 'upper'
-                    }else if(Object.entries(input_variable)[j][1] < Object.entries(text_package.text_variables[i])[j][1]){
-                        detector[i][Object.keys(detector[i])[j]] = 'lower'
-                    }else if(Object.entries(input_variable)[j][1] == Object.entries(text_package.text_variables[i])[j][1]){
-                            
-                    }
-
-                }
-            }
-
-// console.log(detector)
-// console.log(Object.entries(text_package.text_variables[0])[0][1])
-
-
-
-            let test_collector = {lower: [], upper: []};
-
-            for(let i = 0; i < number_of_variables; i++){
-                test_collector.lower[i] = [];
-                test_collector.upper[i] = [];
-            }
-
-
-            let test = [];
-
-
-            let test_collector_1 = [];
-            for(let i = 0; i < number_of_variables; i++){
-                test_collector_1[i] = {lower: [], upper: []};;
-            }
-
-
-            let test_collector_2 = [];
-            for(let i = 0; i < number_of_variables; i++){
-                test_collector_2[i] = []
-            }
-            
-
-
-            for (let i = 0; i < text_package.text_variables.length; i++) {
-                for(let j = 0; j < number_of_variables; j++){
-
-                    if(Object.entries(input_variable)[j][1] > Object.entries(text_package.text_variables[i])[j][1] 
-                    && Object.entries(input_variable)[j][1] < Object.entries(text_package.text_variables[i + 1])[j][1]){
-
-                        test_collector.lower[j].push({
-                            index: i,
-                            variable: text_package.text_variables[i],
-                            path: text_package.text_path_con[i],
-                        })
-
-                        test_collector.upper[j].push({
-                            index: i + 1,
-                            variable: text_package.text_variables[i + 1],
-                            path: text_package.text_path_con[i + 1],
-                        })   
-
-
-                        test_collector_1[j].lower.push({
-                            index: i,
-                            variable: text_package.text_variables[i],
-                            path: text_package.text_path_con[i],
-                        })
-
-                        test_collector_1[j].upper.push({
-                            index: i + 1,
-                            variable: text_package.text_variables[i + 1],
-                            path: text_package.text_path_con[i + 1],
-                        })   
-
-
-
-                        test_collector_2[j].push({
-                            index: i,
-                            variable: text_package.text_variables[i],
-                            path: text_package.text_path_con[i],
-                        })
-
-                        test_collector_2[j].push({
-                            index: i + 1,
-                            variable: text_package.text_variables[i + 1],
-                            path: text_package.text_path_con[i + 1],
-                        })   
-                    }
-
-                }
-            }
-
-
-            let element_length_finder = [];
-
-            for(let i = 0; i < number_of_variables; i++){
-                element_length_finder.push(test_collector_1[i].lower.length + test_collector_1[i].upper.length)
-            }
-
-                        
-            let mainIndex = element_length_finder.reduce((maxIndex, currentValue, currentIndex, arr) => {
-                return currentValue > arr[maxIndex] ? currentIndex : maxIndex;
-            }, 0);
-
-
-            console.log(test_collector_1[mainIndex])
-            console.log(test_collector_2[mainIndex])
-
-
-
-
-
-            let test_mainAxisIndex = findLongestAndShortestSubArray(test_collector.lower).longestIndex;
-            let test_notmainAxisIndex = findLongestAndShortestSubArray(test_collector.lower).shortestIndex;
-
-
-
-
-
-
-            let axis_min_max_val_con = [];
-
-            let collector = {lower: [], upper: []};
-
-            for(let i = 0; i < number_of_variables; i++){
-
-                collector.lower[i] = [];
-                collector.upper[i] = [];
-
-                axis_min_max_val_con[i] = {max: null, min:null};
-
-            }
-
-            
-            
-            let axis_min_max_detector = [];
-    // console.log(detector)
-
-            for (let i = 0; i < text_package.text_variables.length; i++) {
-                for(let j = 0; j < number_of_variables; j++){
-                    if(detector[i][Object.keys(detector[i])[j]] == 'upper' && detector[i+1][Object.keys(detector[i+1])[j]] == 'lower'){
-
-                        collector.lower[j].push({
-                            index: i,
-                            variable: text_package.text_variables[i],
-                            path: text_package.text_path_con[i],
-                        })
-
-                        collector.upper[j].push({
-                            index: i + 1,
-                            variable: text_package.text_variables[i + 1],
-                            path: text_package.text_path_con[i + 1],
-                        })   
-console.log(j, i)
-                        console.log(text_package.text_variables[i])
-
-                    }
-                }
-            }
-console.log(collector)
-
-            function findLongestAndShortestSubArray(arr) {
-                let maxLength = 0;
-                let minLength = Infinity;
-                let longestIndex = 0;
-                let shortestIndex = 0;
-
-                for (let i = 0; i < arr.length; i++) {
-                    if (arr[i].length > maxLength) {
-                    maxLength = arr[i].length;
-                    longestIndex = i;
-                    }
-                    if (arr[i].length < minLength) {
-                    minLength = arr[i].length;
-                    shortestIndex = i;
-                    }
-                }
-
-                return {
-                    longestIndex: longestIndex,
-                    shortestIndex: shortestIndex
-                };
-            }
-
-
-            let mainAxisIndex = findLongestAndShortestSubArray(collector.lower).longestIndex;
-            let notmainAxisIndex = findLongestAndShortestSubArray(collector.lower).shortestIndex;
-
-
-
-
-
-            function findMinAndMaxVal(arr) {
-                if (arr.length === 0) return { most: null, least: null };
-
-                let maxVal = -Infinity;
-                let minVal = Infinity;
-                let maxIndex = -1;
-                let minIndex = -1;
-
-                arr.forEach((item, index) => {
-                    if (item.variable && Object.entries(arr[index].variable)[notmainAxisIndex][1] !== undefined) {
-                    if (Object.entries(arr[index].variable)[notmainAxisIndex][1] > maxVal) {
-                        maxVal = Object.entries(arr[index].variable)[notmainAxisIndex][1];
-                        maxIndex = index;
-                    }
-                    if (Object.entries(arr[index].variable)[notmainAxisIndex][1] < minVal) {
-                        minVal = Object.entries(arr[index].variable)[notmainAxisIndex][1];
-                        minIndex = index;
-                    }
-                    }
-                });
-
-                return {
-                    min: arr[minIndex],
-                    max: arr[maxIndex]
-                };
-            }
-
-            
-
-
-
-
-
-            let axis = {
-                        lower: findMinAndMaxVal(collector.lower[mainAxisIndex]),
-                        upper: findMinAndMaxVal(collector.upper[mainAxisIndex])
-            };
-
-            
-console.log(axis.lower)
-            for(let i = 0; i < axis; i++){
-                axis
-            }
-
-            console.log(axis)
-            console.log(axis_min_max_val_con)
-
-            let vendingmachine = {
-                machine_1: {min:{}, max:{}},
-                machine_2: {}
-            }
-
-            
-            console.log(collector.lower)
-            console.log(collector)
-
-
-
-
-            //if theres 3 variable axis
-            //findMinandMaxVal should change
-let test_input_val = {Weight: 350, Italic: 60, Width: 50}
-
-let ideal_result = [
-    {Weight: 300, Italic: 0, Width: 0}, {Weight: 300, Italic: 100, Width: 0}, {Weight: 300, Italic: 0, Width: 100}, {Weight: 300, Italic: 100, Width: 100},
-    {Weight: 400, Italic: 0, Width: 0}, {Weight: 400, Italic: 100, Width: 0}, {Weight: 400, Italic: 0, Width: 100}, {Weight: 400, Italic: 100, Width: 100},
-]
-
-
-
-let collector_test = {
-    lower: [
-        [{variable:{Weight: 300, Italic: 0, Width: 0}}, {variable:{Weight: 300, Italic: 0, Width: 100}}, {variable:{Weight: 300, Italic: 100, Width: 0}}, {variable:{Weight: 300, Italic: 100, Width: 100}}],
-        [{variable:{Weight: 700, Italic: 0, Width: 0}}, {variable:{Weight: 700, Italic: 0, Width: 100}}],
-        [{variable:{Weight: 700, Italic: 0, Width: 0}}, {variable:{Weight: 700, Italic: 100, Width: 0}}]
-    ], 
-    upper: [
-        [{variable:{Weight: 400, Italic: 0, Width: 0}}, {variable:{Weight: 400, Italic: 0, Width: 100}}, {variable:{Weight: 400, Italic: 100, Width: 0}}, {variable:{Weight: 400, Italic: 100, Width: 100}}],
-        [{variable:{Weight: 0, Italic: 100, Width: 0}}, {variable:{Weight: 0, Italic: 100, Width: 100}}],
-        [{variable:{Weight: 0, Italic: 0, Width: 100}}, {variable:{Weight: 0, Italic: 100, Width: 100}}]
-    ]
-}
-
-console.log(findMinAndMaxVal(collector_test.lower[0]))
-console.log(findMinAndMaxVal(collector_test.lower[1]))
-console.log(collector)
-
-            // [{min: 300, max:500}, {min:0, max:100}]
-
-            return axis;
-
-        }
-
-
-
 
         function findClosestPoints_2(text_package, input_variable) {
 
@@ -671,18 +376,6 @@ console.log(collector)
 
 
 
-            let arr = [
-                {index: 0, path: "something", variable: {Weight: 300, Italic: 0, Width: 0}}, 
-                {index: 3, path: "something", variable: {Weight: 300, Italic: 100, Width: 0}}, 
-                {index: 1, path: "something", variable: {Weight: 300, Italic: 0, Width: 100}}, 
-                {index: 6, path: "something", variable: {Weight: 300, Italic: 100, Width: 100}},
-                {index: 20, path: "something", variable: {Weight: 400, Italic: 0, Width: 0}}, 
-                {index: 4, path: "something", variable: {Weight: 400, Italic: 100, Width: 0}}, 
-                {index: 7, path: "something", variable: {Weight: 400, Italic: 0, Width: 100}}, 
-                {index: 8, path: "something", variable: {Weight: 400, Italic: 100, Width: 100}},
-            ];
-
-
             return {axis, groupedaxis, fraction_properties, axis_calc_order};
 
         }
@@ -775,79 +468,68 @@ console.log(collector)
 
 
 
-            for(let n = 0; n < placeholder_arrays_to_calc_path.length; n++){
-                for(let a = 0; a < placeholder_arrays_to_calc_path[n].length; a++){
+            // for(let n = 0; n < placeholder_arrays_to_calc_path.length; n++){
+            //     for(let a = 0; a < placeholder_arrays_to_calc_path[n].length; a++){
+
+            //         for(let i = 0; i < closet_axis.groupedaxis.length; i++){
+            //             for(let j = 0; j < closet_axis.groupedaxis[i].length; j++){
+            //                 for(let k = 0; k < closet_axis.groupedaxis[i][0].path[j].length; k++){
+            //                     for(let l = 0; l < closet_axis.groupedaxis[i][0].path[j][k].length; l++){
+            //                         placeholder_arrays_to_calc_path[n][a][j][k][l].x = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].x, closet_axis.groupedaxis[i][1].path[j][k][l].x, fraction_con_2[closet_axis.axis_calc_order[n]]);
+            //                         placeholder_arrays_to_calc_path[n][a][j][k][l].y = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].y, closet_axis.groupedaxis[i][1].path[j][k][l].y, fraction_con_2[closet_axis.axis_calc_order[n]]);
+            //                         placeholder_arrays_to_calc_path[n][a][j][k][l].in_x = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].in_x, closet_axis.groupedaxis[i][1].path[j][k][l].in_x, fraction_con_2[closet_axis.axis_calc_order[n]]);
+            //                         placeholder_arrays_to_calc_path[n][a][j][k][l].in_y = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].in_y, closet_axis.groupedaxis[i][1].path[j][k][l].in_y, fraction_con_2[closet_axis.axis_calc_order[n]]);
+            //                         placeholder_arrays_to_calc_path[n][a][j][k][l].out_x = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].out_x, closet_axis.groupedaxis[i][1].path[j][k][l].out_x, fraction_con_2[closet_axis.axis_calc_order[n]]);
+            //                         placeholder_arrays_to_calc_path[n][a][j][k][l].out_y = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].out_y, closet_axis.groupedaxis[i][1].path[j][k][l].out_y, fraction_con_2[closet_axis.axis_calc_order[n]]);
+            //                     }
+            //                 }
+            //             }
+            //         }
+
+            //     }
+            // }
+            
+            
+
+                for(let a = 0; a < placeholder_arrays_to_calc_path[0].length; a++){
 
                     for(let i = 0; i < closet_axis.groupedaxis.length; i++){
                         for(let j = 0; j < closet_axis.groupedaxis[i].length; j++){
                             for(let k = 0; k < closet_axis.groupedaxis[i][0].path[j].length; k++){
                                 for(let l = 0; l < closet_axis.groupedaxis[i][0].path[j][k].length; l++){
-                                    placeholder_arrays_to_calc_path[n][a][j][k][l].x = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].x, closet_axis.groupedaxis[i][1].path[j][k][l].x, fraction_con_2[closet_axis.axis_calc_order[n]]);
-                                    placeholder_arrays_to_calc_path[n][a][j][k][l].y = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].y, closet_axis.groupedaxis[i][1].path[j][k][l].y, fraction_con_2[closet_axis.axis_calc_order[n]]);
-                                    placeholder_arrays_to_calc_path[n][a][j][k][l].in_x = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].in_x, closet_axis.groupedaxis[i][1].path[j][k][l].in_x, fraction_con_2[closet_axis.axis_calc_order[n]]);
-                                    placeholder_arrays_to_calc_path[n][a][j][k][l].in_y = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].in_y, closet_axis.groupedaxis[i][1].path[j][k][l].in_y, fraction_con_2[closet_axis.axis_calc_order[n]]);
-                                    placeholder_arrays_to_calc_path[n][a][j][k][l].out_x = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].out_x, closet_axis.groupedaxis[i][1].path[j][k][l].out_x, fraction_con_2[closet_axis.axis_calc_order[n]]);
-                                    placeholder_arrays_to_calc_path[n][a][j][k][l].out_y = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].out_y, closet_axis.groupedaxis[i][1].path[j][k][l].out_y, fraction_con_2[closet_axis.axis_calc_order[n]]);
+                                    placeholder_arrays_to_calc_path[0][a][j][k][l].x = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].x, closet_axis.groupedaxis[i][1].path[j][k][l].x, fraction_con_2[closet_axis.axis_calc_order[0]]);
+                                    placeholder_arrays_to_calc_path[0][a][j][k][l].y = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].y, closet_axis.groupedaxis[i][1].path[j][k][l].y, fraction_con_2[closet_axis.axis_calc_order[0]]);
+                                    placeholder_arrays_to_calc_path[0][a][j][k][l].in_x = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].in_x, closet_axis.groupedaxis[i][1].path[j][k][l].in_x, fraction_con_2[closet_axis.axis_calc_order[0]]);
+                                    placeholder_arrays_to_calc_path[0][a][j][k][l].in_y = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].in_y, closet_axis.groupedaxis[i][1].path[j][k][l].in_y, fraction_con_2[closet_axis.axis_calc_order[0]]);
+                                    placeholder_arrays_to_calc_path[0][a][j][k][l].out_x = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].out_x, closet_axis.groupedaxis[i][1].path[j][k][l].out_x, fraction_con_2[closet_axis.axis_calc_order[0]]);
+                                    placeholder_arrays_to_calc_path[0][a][j][k][l].out_y = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].out_y, closet_axis.groupedaxis[i][1].path[j][k][l].out_y, fraction_con_2[closet_axis.axis_calc_order[0]]);
                                 }
                             }
                         }
                     }
 
                 }
-            }
-            
-            console.log(placeholder_arrays_to_calc_path)
 
-            let testest_con = [];
 
-            for(let i = 0; i < closet_axis.groupedaxis.length; i++){
-                testest_con[i] = structuredClone(closet_axis.axis[0].path);
-            }
-console.log(testest_con[0][0][0][0])
 
-            for(let i = 0; i < closet_axis.groupedaxis.length; i++){
-                for(let j = 0; j < closet_axis.groupedaxis[i].length; j++){
-                    for(let k = 0; k < closet_axis.groupedaxis[i][0].path[j].length; k++){
-                        for(let l = 0; l < closet_axis.groupedaxis[i][0].path[j][k].length; l++){
 
-                            testest_con[i][j][k][l].x = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].x, closet_axis.groupedaxis[i][1].path[j][k][l].x, fraction_con_2[closet_axis.axis_calc_order[0]]);
-                            testest_con[i][j][k][l].y = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].y, closet_axis.groupedaxis[i][1].path[j][k][l].y, fraction_con_2[closet_axis.axis_calc_order[0]]);
-                            testest_con[i][j][k][l].in_x = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].in_x, closet_axis.groupedaxis[i][1].path[j][k][l].in_x, fraction_con_2[closet_axis.axis_calc_order[0]]);
-                            testest_con[i][j][k][l].in_y = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].in_y, closet_axis.groupedaxis[i][1].path[j][k][l].in_y, fraction_con_2[closet_axis.axis_calc_order[0]]);
-                            testest_con[i][j][k][l].out_x = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].out_x, closet_axis.groupedaxis[i][1].path[j][k][l].out_x, fraction_con_2[closet_axis.axis_calc_order[0]]);
-                            testest_con[i][j][k][l].out_y = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].out_y, closet_axis.groupedaxis[i][1].path[j][k][l].out_y, fraction_con_2[closet_axis.axis_calc_order[0]]);
+                
 
-                            
+            for(let n = 1; n < placeholder_arrays_to_calc_path.length; n++){
+                for(let a = 0; a < placeholder_arrays_to_calc_path[n].length; a++){
+                    for(let i = 0; i < placeholder_arrays_to_calc_path[n][a].length; i++){
+                        for(let j = 0; j < placeholder_arrays_to_calc_path[n][a][i].length; j++){
+                            for(let k = 0; k < placeholder_arrays_to_calc_path[n][a][i][j].length; k++){
+                                placeholder_arrays_to_calc_path[n][a][i][j][k].x = interpolate(placeholder_arrays_to_calc_path[n-1][0][i][j][k].x, placeholder_arrays_to_calc_path[n-1][1][i][j][k].x, fraction_con_2[closet_axis.axis_calc_order[n]]);
+                            }
                         }
                     }
                 }
             }
-
-
-            let testest_con_1 = structuredClone(closet_axis.axis[0].path);
-            
-            // console.log(testest_con)
-
-            
-            for(let j = 0; j < testest_con[0].length; j++){
-                for(let k = 0; k < testest_con[0][j].length; k++){
-                    for(let l = 0; l < testest_con[0][j][k].length; l++){
-
-                        testest_con_1[j][k][l].x = interpolate(testest_con[0][j][k][l].x, testest_con[1][j][k][l].x, fraction_con_2[closet_axis.axis_calc_order[1]]);
-                        testest_con_1[j][k][l].y = interpolate(testest_con[0][j][k][l].y, testest_con[1][j][k][l].y, fraction_con_2[closet_axis.axis_calc_order[1]]);
-                        testest_con_1[j][k][l].in_x = interpolate(testest_con[0][j][k][l].in_x, testest_con[1][j][k][l].in_x, fraction_con_2[closet_axis.axis_calc_order[1]]);
-                        testest_con_1[j][k][l].in_y = interpolate(testest_con[0][j][k][l].in_y, testest_con[1][j][k][l].in_y, fraction_con_2[closet_axis.axis_calc_order[1]]);
-                        testest_con_1[j][k][l].out_x = interpolate(testest_con[0][j][k][l].out_x, testest_con[1][j][k][l].out_x, fraction_con_2[closet_axis.axis_calc_order[1]]);
-                        testest_con_1[j][k][l].out_y = interpolate(testest_con[0][j][k][l].out_y, testest_con[1][j][k][l].out_y, fraction_con_2[closet_axis.axis_calc_order[1]]);
-
-                    }
-                }
-            }
             
 
-            // console.log(testest_con_1)
             
-            // console.log(closet_axis.groupedaxis)
+                
 
 
 
@@ -855,8 +537,7 @@ console.log(testest_con[0][0][0][0])
 
 
 
-
-
+            
 
 
 
@@ -951,7 +632,7 @@ console.log(testest_con[0][0][0][0])
 
 
 
-asdf
+
 
             for (let i = 0; i < text_path_to_draw.length; i++) {
                 for (let j = 0; j < text_path_to_draw[i].length; j++) {
