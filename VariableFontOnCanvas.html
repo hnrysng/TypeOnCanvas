@@ -461,31 +461,6 @@
 
 
 
-
-
-            // for(let n = 0; n < placeholder_arrays_to_calc_path.length; n++){
-            //     for(let a = 0; a < placeholder_arrays_to_calc_path[n].length; a++){
-
-            //         for(let i = 0; i < closet_axis.groupedaxis.length; i++){
-            //             for(let j = 0; j < closet_axis.groupedaxis[i].length; j++){
-            //                 for(let k = 0; k < closet_axis.groupedaxis[i][0].path[j].length; k++){
-            //                     for(let l = 0; l < closet_axis.groupedaxis[i][0].path[j][k].length; l++){
-            //                         placeholder_arrays_to_calc_path[n][a][j][k][l].x = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].x, closet_axis.groupedaxis[i][1].path[j][k][l].x, fraction_con_2[closet_axis.axis_calc_order[n]]);
-            //                         placeholder_arrays_to_calc_path[n][a][j][k][l].y = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].y, closet_axis.groupedaxis[i][1].path[j][k][l].y, fraction_con_2[closet_axis.axis_calc_order[n]]);
-            //                         placeholder_arrays_to_calc_path[n][a][j][k][l].in_x = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].in_x, closet_axis.groupedaxis[i][1].path[j][k][l].in_x, fraction_con_2[closet_axis.axis_calc_order[n]]);
-            //                         placeholder_arrays_to_calc_path[n][a][j][k][l].in_y = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].in_y, closet_axis.groupedaxis[i][1].path[j][k][l].in_y, fraction_con_2[closet_axis.axis_calc_order[n]]);
-            //                         placeholder_arrays_to_calc_path[n][a][j][k][l].out_x = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].out_x, closet_axis.groupedaxis[i][1].path[j][k][l].out_x, fraction_con_2[closet_axis.axis_calc_order[n]]);
-            //                         placeholder_arrays_to_calc_path[n][a][j][k][l].out_y = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].out_y, closet_axis.groupedaxis[i][1].path[j][k][l].out_y, fraction_con_2[closet_axis.axis_calc_order[n]]);
-            //                     }
-            //                 }
-            //             }
-            //         }
-
-            //     }
-            // }
-            
-            
-
                 for(let a = 0; a < placeholder_arrays_to_calc_path[0].length; a++){
 
                     for(let i = 0; i < closet_axis.groupedaxis.length; i++){
@@ -571,53 +546,6 @@
 
             let text_path_to_draw = structuredClone(lower.path);
 
-
-
-            let test = [];
-
-            for(let i = 0; i < fraction_con.length;i++){
-                test[i] = structuredClone(lower.path);
-            }
-
-
-
-            let test_test = structuredClone(lower.path);
-
-            for(let x = 0; x < test.length; x++){
-                for (let i = 0; i < test[x].length; i++) {
-                    for (let j = 0; j < test[x][i].length; j++) {
-                        for (let k = 0; k < test[x][i][j].length; k++) {
-                        
-                            test[x][i][j][k].x = interpolate(lower.path[i][j][k].x, upper.path[i][j][k].x, fraction_con[x]);
-                            test[x][i][j][k].y = interpolate(lower.path[i][j][k].y - variablefont[0].typeface.parameters.ascender, upper.path[i][j][k].y - variablefont[0].typeface.parameters.ascender, fraction_con[x]);
-                            test[x][i][j][k].in_x = interpolate(lower.path[i][j][k].in_x, upper.path[i][j][k].in_x, fraction_con[x]);
-                            test[x][i][j][k].in_y = interpolate(lower.path[i][j][k].in_y - variablefont[0].typeface.parameters.ascender, upper.path[i][j][k].in_y - variablefont[0].typeface.parameters.ascender, fraction_con[x]);
-                            test[x][i][j][k].out_x = interpolate(lower.path[i][j][k].out_x, upper.path[i][j][k].out_x, fraction_con[x]);
-                            test[x][i][j][k].out_y = interpolate(lower.path[i][j][k].out_y - variablefont[0].typeface.parameters.ascender, upper.path[i][j][k].out_y - variablefont[0].typeface.parameters.ascender, fraction_con[x]);
-                        }
-
-                    }
-                }
-            }
-
-
-
-            for (let i = 0; i < test_test.length; i++) {
-                for (let j = 0; j < test_test[i].length; j++) {
-                    for (let k = 0; k < test_test[i][j].length; k++) {
-                        
-                        for(let x = 0; x < fraction_con.length; x++){
-                            test_test[i][j][k].x = interpolate(lower.path[i][j][k].x, upper.path[i][j][k].x, fraction_con[x]);
-                            test_test[i][j][k].y = interpolate(lower.path[i][j][k].y - variablefont[0].typeface.parameters.ascender, upper.path[i][j][k].y - variablefont[0].typeface.parameters.ascender, fraction_con[x]);
-                            test_test[i][j][k].in_x = interpolate(lower.path[i][j][k].in_x, upper.path[i][j][k].in_x, fraction_con[x]);
-                            test_test[i][j][k].in_y = interpolate(lower.path[i][j][k].in_y - variablefont[0].typeface.parameters.ascender, upper.path[i][j][k].in_y - variablefont[0].typeface.parameters.ascender, fraction_con[x]);
-                            test_test[i][j][k].out_x = interpolate(lower.path[i][j][k].out_x, upper.path[i][j][k].out_x, fraction_con[x]);
-                            test_test[i][j][k].out_y = interpolate(lower.path[i][j][k].out_y - variablefont[0].typeface.parameters.ascender, upper.path[i][j][k].out_y - variablefont[0].typeface.parameters.ascender, fraction_con[x]);
-                        }
-
-                    }
-                }
-            }
 
 
 
