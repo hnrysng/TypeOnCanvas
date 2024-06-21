@@ -175,75 +175,6 @@
         }
 
 
-        
-        function findClosestPoints(text_package, input_variable) {
-            let upper_con = {
-                index: null,
-                variable: null,
-                path: null,
-            };
-
-            let lower_con = {
-                index: null,
-                variable: null,
-                path: null,
-            };
-
-
-            for (let i = 0; i < text_package.text_variables.length; i++) {
-                let variable_axes_val = text_package.text_variables[i];
-                
-                // Assume initially that variable_axes_val variable is both upper and lower bound
-                let isUpper = true;
-                let isLower = true;
-
-                // Compare each key in the variable object
-                for (let key in input_variable) {
-                    if (variable_axes_val[key] < input_variable[key]) {
-                        isUpper = false;
-                    }else if (variable_axes_val[key] > input_variable[key]) {
-                        isLower = false;
-                    }else if (variable_axes_val[key] == input_variable[key] && input_variable[key] == 0) {
-                        isUpper = false;
-                    }else if (variable_axes_val[key] == input_variable[key]) {
-                        isLower = false;
-                    }
-                    // console.log(variable_axes_val[key], variable[key])
-                }
-
-// console.log(variable)
-                if (isUpper) {
-                    if (upper_con.index == null || 
-                        Object.entries(input_variable).some(([key, value]) =>
-                            variable_axes_val[key] < upper_con.variable[key] ||
-                            (variable_axes_val[key] === upper_con.variable[key] && variable_axes_val[key] < upper_con.variable[key])
-                        )) {
-                        upper_con.index = i;
-                        upper_con.variable = variable_axes_val;
-                        upper_con.path = text_package.text_path_con[i];
-                    }
-                }
-
-
-                if (isLower) {
-                    if (lower_con.index == null || 
-                        Object.entries(input_variable).some(([key, value]) =>
-                            variable_axes_val[key] > lower_con.variable[key] ||
-                            (variable_axes_val[key] === lower_con.variable[key] && variable_axes_val[key] > lower_con.variable[key])
-                        )) {
-                        lower_con.index = i;
-                        lower_con.variable = variable_axes_val;
-                        lower_con.path = text_package.text_path_con[i];
-                    }
-                }
-            }
-            
-            // console.log(variable, upper_con, lower_con)
-            return { upper_con, lower_con };
-            
-        }
-
-
 
 
 
@@ -411,15 +342,6 @@
 
 
 
-            let { lower_con: lower, upper_con: upper } = findClosestPoints(text_package, inputVariables);
-
-
-            if (!lower || !upper) {
-                return null; // Or some default path value
-            }
-
-
-
 
             let closet_axis = findClosestPoints_2(text_package, inputVariables)
 
@@ -533,72 +455,39 @@
             }
 
 
-
-
-
-            let fraction_con = [];
-
-            for (let i = 0; i < Object.entries(inputVariables).length; i++){
-                fraction_con[i] = (Object.entries(inputVariables)[i][1] - Object.entries(lower.variable)[i][1]) / (Object.entries(upper.variable)[i][1] - Object.entries(lower.variable)[i][1]);
-            }
-
-
-
-            let text_path_to_draw = structuredClone(lower.path);
-
-
-
-
-
-
-
-            for (let i = 0; i < text_path_to_draw.length; i++) {
-                for (let j = 0; j < text_path_to_draw[i].length; j++) {
-                    for (let k = 0; k < text_path_to_draw[i][j].length; k++) {
-                        
-                        for(let x = 0; x < fraction_con.length; x++){
-                            text_path_to_draw[i][j][k].x = interpolate(lower.path[i][j][k].x, upper.path[i][j][k].x, fraction_con[x]);
-                            text_path_to_draw[i][j][k].y = interpolate(lower.path[i][j][k].y - variablefont[0].typeface.parameters.ascender, upper.path[i][j][k].y - variablefont[0].typeface.parameters.ascender, fraction_con[x]);
-                            text_path_to_draw[i][j][k].in_x = interpolate(lower.path[i][j][k].in_x, upper.path[i][j][k].in_x, fraction_con[x]);
-                            text_path_to_draw[i][j][k].in_y = interpolate(lower.path[i][j][k].in_y - variablefont[0].typeface.parameters.ascender, upper.path[i][j][k].in_y - variablefont[0].typeface.parameters.ascender, fraction_con[x]);
-                            text_path_to_draw[i][j][k].out_x = interpolate(lower.path[i][j][k].out_x, upper.path[i][j][k].out_x, fraction_con[x]);
-                            text_path_to_draw[i][j][k].out_y = interpolate(lower.path[i][j][k].out_y - variablefont[0].typeface.parameters.ascender, upper.path[i][j][k].out_y - variablefont[0].typeface.parameters.ascender, fraction_con[x]);
-                        }
-
-                    }
-                }
-            }
+            text_path_to_draw = placeholder_arrays_to_calc_path[1][0]
 
 
 
 
 
             
-            let structure_lower = structuredClone(text_package.text_structure_con[lower.index]);
-            let structure_upper = structuredClone(text_package.text_structure_con[upper.index]);
-            let structure_path_to_draw = structuredClone(text_package.text_structure_con[lower.index]);
+            // let structure_lower = structuredClone(text_package.text_structure_con[lower.index]);
+            // let structure_upper = structuredClone(text_package.text_structure_con[upper.index]);
+            // let structure_path_to_draw = structuredClone(text_package.text_structure_con[lower.index]);
 
-            for (let i = 0; i < structure_path_to_draw.length; i++) {
+            // for (let i = 0; i < structure_path_to_draw.length; i++) {
                         
-                for(let x = 0; x < fraction_con.length; x++){
-                    structure_path_to_draw[i].base_0.x = interpolate(structure_lower[i].base_0.x, structure_upper[i].base_0.x, fraction_con[x]);
-                    structure_path_to_draw[i].base_0.y = interpolate(structure_lower[i].base_0.y, structure_upper[i].base_0.y, fraction_con[x]);
-                    structure_path_to_draw[i].base_1.x = interpolate(structure_lower[i].base_1.x, structure_upper[i].base_1.x, fraction_con[x]);
-                    structure_path_to_draw[i].base_1.y = interpolate(structure_lower[i].base_1.y, structure_upper[i].base_1.y, fraction_con[x]);
-                    structure_path_to_draw[i].point_0.x = interpolate(structure_lower[i].point_0.x, structure_upper[i].point_0.x, fraction_con[x]);
-                    structure_path_to_draw[i].point_0.y = interpolate(structure_lower[i].point_0.y, structure_upper[i].point_0.y, fraction_con[x]);
-                    structure_path_to_draw[i].point_1.x = interpolate(structure_lower[i].point_1.x, structure_upper[i].point_1.x, fraction_con[x]);
-                    structure_path_to_draw[i].point_1.y = interpolate(structure_lower[i].point_1.y, structure_upper[i].point_1.y, fraction_con[x]);
-                    structure_path_to_draw[i].point_2.x = interpolate(structure_lower[i].point_2.x, structure_upper[i].point_2.x, fraction_con[x]);
-                    structure_path_to_draw[i].point_2.y = interpolate(structure_lower[i].point_2.y, structure_upper[i].point_2.y, fraction_con[x]);
-                    structure_path_to_draw[i].point_3.x = interpolate(structure_lower[i].point_3.x, structure_upper[i].point_3.x, fraction_con[x]);
-                    structure_path_to_draw[i].point_3.y = interpolate(structure_lower[i].point_3.y, structure_upper[i].point_3.y, fraction_con[x]);
-                }
+            //     for(let x = 0; x < fraction_con.length; x++){
+            //         structure_path_to_draw[i].base_0.x = interpolate(structure_lower[i].base_0.x, structure_upper[i].base_0.x, fraction_con[x]);
+            //         structure_path_to_draw[i].base_0.y = interpolate(structure_lower[i].base_0.y, structure_upper[i].base_0.y, fraction_con[x]);
+            //         structure_path_to_draw[i].base_1.x = interpolate(structure_lower[i].base_1.x, structure_upper[i].base_1.x, fraction_con[x]);
+            //         structure_path_to_draw[i].base_1.y = interpolate(structure_lower[i].base_1.y, structure_upper[i].base_1.y, fraction_con[x]);
+            //         structure_path_to_draw[i].point_0.x = interpolate(structure_lower[i].point_0.x, structure_upper[i].point_0.x, fraction_con[x]);
+            //         structure_path_to_draw[i].point_0.y = interpolate(structure_lower[i].point_0.y, structure_upper[i].point_0.y, fraction_con[x]);
+            //         structure_path_to_draw[i].point_1.x = interpolate(structure_lower[i].point_1.x, structure_upper[i].point_1.x, fraction_con[x]);
+            //         structure_path_to_draw[i].point_1.y = interpolate(structure_lower[i].point_1.y, structure_upper[i].point_1.y, fraction_con[x]);
+            //         structure_path_to_draw[i].point_2.x = interpolate(structure_lower[i].point_2.x, structure_upper[i].point_2.x, fraction_con[x]);
+            //         structure_path_to_draw[i].point_2.y = interpolate(structure_lower[i].point_2.y, structure_upper[i].point_2.y, fraction_con[x]);
+            //         structure_path_to_draw[i].point_3.x = interpolate(structure_lower[i].point_3.x, structure_upper[i].point_3.x, fraction_con[x]);
+            //         structure_path_to_draw[i].point_3.y = interpolate(structure_lower[i].point_3.y, structure_upper[i].point_3.y, fraction_con[x]);
+            //     }
 
-            }
+            // }
 
-text_path_to_draw = placeholder_arrays_to_calc_path[1][0]
-            return { text_path_to_draw, structure_path_to_draw };
+
+            // return { text_path_to_draw, structure_path_to_draw };
+            return { text_path_to_draw };
 
 
         }
@@ -687,39 +576,39 @@ text_path_to_draw = placeholder_arrays_to_calc_path[1][0]
 
                 
 
-                for (let i = 0; i < text.length; i++) {
+                // for (let i = 0; i < text.length; i++) {
 
-                    ctx.beginPath();
-                        ctx.moveTo((structure_path_to_draw[i].point_0.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_path_to_draw[i].point_0.y * assets.scale) + assets.position.y + pos_y_align[i]);
-                        ctx.lineTo((structure_path_to_draw[i].point_1.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_path_to_draw[i].point_1.y * assets.scale) + assets.position.y + pos_y_align[i]);
-                        ctx.lineTo((structure_path_to_draw[i].point_2.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_path_to_draw[i].point_2.y * assets.scale) + assets.position.y + pos_y_align[i]);
-                        ctx.lineTo((structure_path_to_draw[i].point_3.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_path_to_draw[i].point_3.y * assets.scale) + assets.position.y + pos_y_align[i]);
+                //     ctx.beginPath();
+                //         ctx.moveTo((structure_path_to_draw[i].point_0.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_path_to_draw[i].point_0.y * assets.scale) + assets.position.y + pos_y_align[i]);
+                //         ctx.lineTo((structure_path_to_draw[i].point_1.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_path_to_draw[i].point_1.y * assets.scale) + assets.position.y + pos_y_align[i]);
+                //         ctx.lineTo((structure_path_to_draw[i].point_2.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_path_to_draw[i].point_2.y * assets.scale) + assets.position.y + pos_y_align[i]);
+                //         ctx.lineTo((structure_path_to_draw[i].point_3.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_path_to_draw[i].point_3.y * assets.scale) + assets.position.y + pos_y_align[i]);
                         
-                        ctx.lineTo((structure_path_to_draw[i].point_0.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_path_to_draw[i].point_0.y * assets.scale) + assets.position.y + pos_y_align[i]);
+                //         ctx.lineTo((structure_path_to_draw[i].point_0.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_path_to_draw[i].point_0.y * assets.scale) + assets.position.y + pos_y_align[i]);
 
-                        ctx.strokeStyle = assets.structure_style;
-                        ctx.lineWidth = assets.structure_width;
-                        ctx.stroke();
+                //         ctx.strokeStyle = assets.structure_style;
+                //         ctx.lineWidth = assets.structure_width;
+                //         ctx.stroke();
 
-                        ctx.closePath();
-
-
-                        ctx.beginPath();
-                        ctx.moveTo((structure_path_to_draw[i].base_0.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_path_to_draw[i].base_0.y * assets.scale) + assets.position.y + pos_y_align[i]);
-                        ctx.lineTo((structure_path_to_draw[i].base_1.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_path_to_draw[i].base_1.y * assets.scale) + assets.position.y + pos_y_align[i]);
-
-                        ctx.strokeStyle = assets.structure_style;
-                        ctx.lineWidth = assets.structure_width;
-                        ctx.stroke();
-
-                    ctx.closePath();
-
-                }
+                //         ctx.closePath();
 
 
-                for(let i = 0; i < text.length; i++){
-                    width_con[i] = (structure_path_to_draw[i].point_1.x - structure_path_to_draw[i].point_0.x) * assets.scale;
-                }
+                //         ctx.beginPath();
+                //         ctx.moveTo((structure_path_to_draw[i].base_0.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_path_to_draw[i].base_0.y * assets.scale) + assets.position.y + pos_y_align[i]);
+                //         ctx.lineTo((structure_path_to_draw[i].base_1.x * assets.scale) + updated_width_con[i] + text_alignment, (structure_path_to_draw[i].base_1.y * assets.scale) + assets.position.y + pos_y_align[i]);
+
+                //         ctx.strokeStyle = assets.structure_style;
+                //         ctx.lineWidth = assets.structure_width;
+                //         ctx.stroke();
+
+                //     ctx.closePath();
+
+                // }
+
+
+                // for(let i = 0; i < text.length; i++){
+                //     width_con[i] = (structure_path_to_draw[i].point_1.x - structure_path_to_draw[i].point_0.x) * assets.scale;
+                // }
 
 
                 // Variable to store the cumulative sum
@@ -840,7 +729,7 @@ text_path_to_draw = placeholder_arrays_to_calc_path[1][0]
         
 
 
-        let letter_test = new VariableFontOnCanvas(variblefont, assets, 'HamburgefonstivHamburgefonstiv');
+        let letter_test = new VariableFontOnCanvas(variblefont, assets, 'Ha');
 
 
 
