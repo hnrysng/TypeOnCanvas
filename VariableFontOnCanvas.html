@@ -443,7 +443,7 @@
                 return result;
             }
 
-            let num_of_array_to_calc_path = get_num_of_array_to_calc_path(closet_axis.groupedaxis.length);
+            let num_of_array_to_calc_path = get_num_of_array_to_calc_path(number_of_variables);
                                     
             function make_placeholder_arrays_to_calc_path(num_of_array_to_calc_path) {
                 return num_of_array_to_calc_path.map(size => {
@@ -460,11 +460,6 @@
             
 
 
-            console.log(placeholder_arrays_to_calc_path)
-            console.log(closet_axis.groupedaxis)
-            console.log(placeholder_arrays_to_calc_path[0][0][0][0][0].x)
-            console.log(closet_axis.groupedaxis[0][0].path[0][0][0].x)
-            console.log(closet_axis.groupedaxis[0][0])
 
 
 
@@ -516,31 +511,26 @@
                 
 
             for(let n = 1; n < placeholder_arrays_to_calc_path.length; n++){
-                for(let a = 0; a < placeholder_arrays_to_calc_path[n].length; a++){
+                for(let a = 0; a < placeholder_arrays_to_calc_path[n].length; a = a + 2){
+
                     for(let i = 0; i < placeholder_arrays_to_calc_path[n][a].length; i++){
                         for(let j = 0; j < placeholder_arrays_to_calc_path[n][a][i].length; j++){
                             for(let k = 0; k < placeholder_arrays_to_calc_path[n][a][i][j].length; k++){
-                                placeholder_arrays_to_calc_path[n][a][i][j][k].x = interpolate(placeholder_arrays_to_calc_path[n-1][0][i][j][k].x, placeholder_arrays_to_calc_path[n-1][1][i][j][k].x, fraction_con_2[closet_axis.axis_calc_order[n]]);
+                                placeholder_arrays_to_calc_path[n][a][i][j][k].x = interpolate(placeholder_arrays_to_calc_path[n-1][a][i][j][k].x, placeholder_arrays_to_calc_path[n-1][a+1][i][j][k].x, fraction_con_2[closet_axis.axis_calc_order[n]]);
+                                placeholder_arrays_to_calc_path[n][a][i][j][k].y = interpolate(placeholder_arrays_to_calc_path[n-1][a][i][j][k].y, placeholder_arrays_to_calc_path[n-1][a+1][i][j][k].y, fraction_con_2[closet_axis.axis_calc_order[n]]);
+                                placeholder_arrays_to_calc_path[n][a][i][j][k].in_x = interpolate(placeholder_arrays_to_calc_path[n-1][a][i][j][k].in_x, placeholder_arrays_to_calc_path[n-1][a+1][i][j][k].in_x, fraction_con_2[closet_axis.axis_calc_order[n]]);
+                                placeholder_arrays_to_calc_path[n][a][i][j][k].in_y = interpolate(placeholder_arrays_to_calc_path[n-1][a][i][j][k].in_y, placeholder_arrays_to_calc_path[n-1][a+1][i][j][k].in_y, fraction_con_2[closet_axis.axis_calc_order[n]]);
+                                placeholder_arrays_to_calc_path[n][a][i][j][k].out_x = interpolate(placeholder_arrays_to_calc_path[n-1][a][i][j][k].out_x, placeholder_arrays_to_calc_path[n-1][a+1][i][j][k].out_x, fraction_con_2[closet_axis.axis_calc_order[n]]);
+                                placeholder_arrays_to_calc_path[n][a][i][j][k].out_y = interpolate(placeholder_arrays_to_calc_path[n-1][a][i][j][k].out_y, placeholder_arrays_to_calc_path[n-1][a+1][i][j][k].out_y, fraction_con_2[closet_axis.axis_calc_order[n]]);
                             }
                         }
                     }
+
                 }
             }
             
 
             
-                
-
-
-
-
-
-
-
-            
-
-
-
 
 
 
@@ -679,7 +669,7 @@
 
             }
 
-
+text_path_to_draw = placeholder_arrays_to_calc_path[1][0]
             return { text_path_to_draw, structure_path_to_draw };
 
 
@@ -726,7 +716,7 @@
                 let structure_path_to_draw = calc_test(variables).structure_path_to_draw;
                     
 
-                
+
                 ctx.beginPath();
                 for (let i = 0; i < text.length; i++) {
 
@@ -902,7 +892,7 @@
 
 
         let assets = {
-                    position: {x: 100, y:100},
+                    position: {x: 100, y:500},
                     weight: 0,
                     scale: 0.5,
                     alignment: 'left',
@@ -919,7 +909,11 @@
         };
 
 
+        
+
+
         let letter_test = new VariableFontOnCanvas(variblefont, assets, 'HamburgefonstivHamburgefonstiv');
+
 
 
         
@@ -937,7 +931,9 @@
 
             // letter_a_1.draw(0.5);
 
-            letter_test.draw({Weight: 360 + x, Italic: 10})
+            letter_test.draw({Weight: 320, Italic: 80})
+
+
 
             window.requestAnimationFrame(anim);
 
