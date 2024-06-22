@@ -235,15 +235,11 @@
 
             }
 
-        function interpolate(value1, value2, fraction) {
+            function interpolate(value1, value2, fraction) {
             return value1 + (value2 - value1) * fraction;
         }
 
-
-
-
-
-        function findClosestPoints(text_package, input_variable) {
+            function findClosestPoints(text_package, input_variable) {
 
 
 
@@ -264,7 +260,6 @@
             for (let i = 0; i < text_package.text_variables.length; i++) {
                 for(let j = 0; j < number_of_variables; j++){
 
-                    
 
                     if(input_variable[Object.entries(text_package.text_variables[0])[j][0]] == Object.entries(text_package.text_variables[i])[j][1] && text_package.text_variables[i - 1] == true){
                             axis_filter[j].push({
@@ -425,7 +420,6 @@
                 return result;
             }
 
-            let num_of_array_to_calc_path = get_num_of_array_to_calc_path(number_of_variables);
                                     
             function make_placeholder_arrays_to_calc_path(num_of_array_to_calc_path) {
                 return num_of_array_to_calc_path.map(size => {
@@ -437,11 +431,11 @@
                 });
             }
 
+            let num_of_array_to_calc_path = get_num_of_array_to_calc_path(number_of_variables);
+            let placeholder_arrays_to_calc_path = make_placeholder_arrays_to_calc_path(num_of_array_to_calc_path);
 
-        let placeholder_arrays_to_calc_path = make_placeholder_arrays_to_calc_path(num_of_array_to_calc_path);
 
-
-        function calc_test(inputVariables){
+            function calc_test(inputVariables){
 
 
             for(let i = 0; i < variable_max_val_con.length; i++){
@@ -457,14 +451,17 @@
 
             let closet_axis = findClosestPoints(text_package, inputVariables)
 
-            let fraction_con_2 = structuredClone(inputVariables);
+            let fraction_con = structuredClone(inputVariables);
 
             for (let i = 0; i < Object.entries(inputVariables).length; i++){
-                fraction_con_2[Object.keys(fraction_con_2)[i]] = (Object.entries(inputVariables)[i][1] - closet_axis.fraction_properties[i].min) / (closet_axis.fraction_properties[i].max - closet_axis.fraction_properties[i].min);
+                fraction_con[Object.keys(fraction_con)[i]] = (Object.entries(inputVariables)[i][1] - closet_axis.fraction_properties[i].min) / (closet_axis.fraction_properties[i].max - closet_axis.fraction_properties[i].min);
             }
 
 
-
+console.log(closet_axis)
+//get the index number to find the structure path
+console.log(text_package)
+aasdf
 //             console.log(closet_axis)
 
 // console.log(closet_axis.groupedaxis)
@@ -476,12 +473,12 @@
                     for(let j = 0; j < closet_axis.groupedaxis[a][0].path.length; j++){
                         for(let k = 0; k < closet_axis.groupedaxis[a][0].path[j].length; k++){
                             for(let l = 0; l < closet_axis.groupedaxis[a][0].path[j][k].length; l++){
-                                placeholder_arrays_to_calc_path[0][a][j][k][l].x = interpolate(closet_axis.groupedaxis[a][0].path[j][k][l].x, closet_axis.groupedaxis[a][1].path[j][k][l].x, fraction_con_2[closet_axis.axis_calc_order[0]]);
-                                placeholder_arrays_to_calc_path[0][a][j][k][l].y = interpolate(closet_axis.groupedaxis[a][0].path[j][k][l].y, closet_axis.groupedaxis[a][1].path[j][k][l].y, fraction_con_2[closet_axis.axis_calc_order[0]]);
-                                placeholder_arrays_to_calc_path[0][a][j][k][l].in_x = interpolate(closet_axis.groupedaxis[a][0].path[j][k][l].in_x, closet_axis.groupedaxis[a][1].path[j][k][l].in_x, fraction_con_2[closet_axis.axis_calc_order[0]]);
-                                placeholder_arrays_to_calc_path[0][a][j][k][l].in_y = interpolate(closet_axis.groupedaxis[a][0].path[j][k][l].in_y, closet_axis.groupedaxis[a][1].path[j][k][l].in_y, fraction_con_2[closet_axis.axis_calc_order[0]]);
-                                placeholder_arrays_to_calc_path[0][a][j][k][l].out_x = interpolate(closet_axis.groupedaxis[a][0].path[j][k][l].out_x, closet_axis.groupedaxis[a][1].path[j][k][l].out_x, fraction_con_2[closet_axis.axis_calc_order[0]]);
-                                placeholder_arrays_to_calc_path[0][a][j][k][l].out_y = interpolate(closet_axis.groupedaxis[a][0].path[j][k][l].out_y, closet_axis.groupedaxis[a][1].path[j][k][l].out_y, fraction_con_2[closet_axis.axis_calc_order[0]]);
+                                placeholder_arrays_to_calc_path[0][a][j][k][l].x = interpolate(closet_axis.groupedaxis[a][0].path[j][k][l].x, closet_axis.groupedaxis[a][1].path[j][k][l].x, fraction_con[closet_axis.axis_calc_order[0]]);
+                                placeholder_arrays_to_calc_path[0][a][j][k][l].y = interpolate(closet_axis.groupedaxis[a][0].path[j][k][l].y, closet_axis.groupedaxis[a][1].path[j][k][l].y, fraction_con[closet_axis.axis_calc_order[0]]);
+                                placeholder_arrays_to_calc_path[0][a][j][k][l].in_x = interpolate(closet_axis.groupedaxis[a][0].path[j][k][l].in_x, closet_axis.groupedaxis[a][1].path[j][k][l].in_x, fraction_con[closet_axis.axis_calc_order[0]]);
+                                placeholder_arrays_to_calc_path[0][a][j][k][l].in_y = interpolate(closet_axis.groupedaxis[a][0].path[j][k][l].in_y, closet_axis.groupedaxis[a][1].path[j][k][l].in_y, fraction_con[closet_axis.axis_calc_order[0]]);
+                                placeholder_arrays_to_calc_path[0][a][j][k][l].out_x = interpolate(closet_axis.groupedaxis[a][0].path[j][k][l].out_x, closet_axis.groupedaxis[a][1].path[j][k][l].out_x, fraction_con[closet_axis.axis_calc_order[0]]);
+                                placeholder_arrays_to_calc_path[0][a][j][k][l].out_y = interpolate(closet_axis.groupedaxis[a][0].path[j][k][l].out_y, closet_axis.groupedaxis[a][1].path[j][k][l].out_y, fraction_con[closet_axis.axis_calc_order[0]]);
                             }
                         }
                     }
@@ -498,12 +495,12 @@
 
 //             console.log(closet_axis.groupedaxis[0][0].path[0][0][0])
 //             console.log(closet_axis.groupedaxis[0][1].path[0][0][0])
-//             console.log(interpolate(closet_axis.groupedaxis[0][0].path[0][0][0].x, closet_axis.groupedaxis[0][1].path[0][0][0].x, fraction_con_2[closet_axis.axis_calc_order[0]]))
+//             console.log(interpolate(closet_axis.groupedaxis[0][0].path[0][0][0].x, closet_axis.groupedaxis[0][1].path[0][0][0].x, fraction_con[closet_axis.axis_calc_order[0]]))
 
 
 //             console.log(closet_axis.groupedaxis[1][0].path[0][0][0])
 //             console.log(closet_axis.groupedaxis[1][1].path[0][0][0])
-//             console.log(interpolate(closet_axis.groupedaxis[1][0].path[0][0][0].x, closet_axis.groupedaxis[1][1].path[0][0][0].x, fraction_con_2[closet_axis.axis_calc_order[0]]))
+//             console.log(interpolate(closet_axis.groupedaxis[1][0].path[0][0][0].x, closet_axis.groupedaxis[1][1].path[0][0][0].x, fraction_con[closet_axis.axis_calc_order[0]]))
 
 
 //             // console.log(placeholder_arrays_to_calc_path)
@@ -518,12 +515,12 @@
                     for(let i = 0; i < placeholder_arrays_to_calc_path[n][a].length; i++){
                         for(let j = 0; j < placeholder_arrays_to_calc_path[n][a][i].length; j++){
                             for(let k = 0; k < placeholder_arrays_to_calc_path[n][a][i][j].length; k++){
-                                placeholder_arrays_to_calc_path[n][a][i][j][k].x = interpolate(placeholder_arrays_to_calc_path[n-1][a][i][j][k].x, placeholder_arrays_to_calc_path[n-1][a+1][i][j][k].x, fraction_con_2[closet_axis.axis_calc_order[n]]);
-                                placeholder_arrays_to_calc_path[n][a][i][j][k].y = interpolate(placeholder_arrays_to_calc_path[n-1][a][i][j][k].y, placeholder_arrays_to_calc_path[n-1][a+1][i][j][k].y, fraction_con_2[closet_axis.axis_calc_order[n]]);
-                                placeholder_arrays_to_calc_path[n][a][i][j][k].in_x = interpolate(placeholder_arrays_to_calc_path[n-1][a][i][j][k].in_x, placeholder_arrays_to_calc_path[n-1][a+1][i][j][k].in_x, fraction_con_2[closet_axis.axis_calc_order[n]]);
-                                placeholder_arrays_to_calc_path[n][a][i][j][k].in_y = interpolate(placeholder_arrays_to_calc_path[n-1][a][i][j][k].in_y, placeholder_arrays_to_calc_path[n-1][a+1][i][j][k].in_y, fraction_con_2[closet_axis.axis_calc_order[n]]);
-                                placeholder_arrays_to_calc_path[n][a][i][j][k].out_x = interpolate(placeholder_arrays_to_calc_path[n-1][a][i][j][k].out_x, placeholder_arrays_to_calc_path[n-1][a+1][i][j][k].out_x, fraction_con_2[closet_axis.axis_calc_order[n]]);
-                                placeholder_arrays_to_calc_path[n][a][i][j][k].out_y = interpolate(placeholder_arrays_to_calc_path[n-1][a][i][j][k].out_y, placeholder_arrays_to_calc_path[n-1][a+1][i][j][k].out_y, fraction_con_2[closet_axis.axis_calc_order[n]]);
+                                placeholder_arrays_to_calc_path[n][a][i][j][k].x = interpolate(placeholder_arrays_to_calc_path[n-1][a][i][j][k].x, placeholder_arrays_to_calc_path[n-1][a+1][i][j][k].x, fraction_con[closet_axis.axis_calc_order[n]]);
+                                placeholder_arrays_to_calc_path[n][a][i][j][k].y = interpolate(placeholder_arrays_to_calc_path[n-1][a][i][j][k].y, placeholder_arrays_to_calc_path[n-1][a+1][i][j][k].y, fraction_con[closet_axis.axis_calc_order[n]]);
+                                placeholder_arrays_to_calc_path[n][a][i][j][k].in_x = interpolate(placeholder_arrays_to_calc_path[n-1][a][i][j][k].in_x, placeholder_arrays_to_calc_path[n-1][a+1][i][j][k].in_x, fraction_con[closet_axis.axis_calc_order[n]]);
+                                placeholder_arrays_to_calc_path[n][a][i][j][k].in_y = interpolate(placeholder_arrays_to_calc_path[n-1][a][i][j][k].in_y, placeholder_arrays_to_calc_path[n-1][a+1][i][j][k].in_y, fraction_con[closet_axis.axis_calc_order[n]]);
+                                placeholder_arrays_to_calc_path[n][a][i][j][k].out_x = interpolate(placeholder_arrays_to_calc_path[n-1][a][i][j][k].out_x, placeholder_arrays_to_calc_path[n-1][a+1][i][j][k].out_x, fraction_con[closet_axis.axis_calc_order[n]]);
+                                placeholder_arrays_to_calc_path[n][a][i][j][k].out_y = interpolate(placeholder_arrays_to_calc_path[n-1][a][i][j][k].out_y, placeholder_arrays_to_calc_path[n-1][a+1][i][j][k].out_y, fraction_con[closet_axis.axis_calc_order[n]]);
                             }
                         }
                     }
@@ -533,7 +530,7 @@
 
             // console.log(placeholder_arrays_to_calc_path)
             
-            // console.log(interpolate(placeholder_arrays_to_calc_path[0][0][0][0][0].x, placeholder_arrays_to_calc_path[0][1][0][0][0].x, fraction_con_2[closet_axis.axis_calc_order[1]]))
+            // console.log(interpolate(placeholder_arrays_to_calc_path[0][0][0][0][0].x, placeholder_arrays_to_calc_path[0][1][0][0][0].x, fraction_con[closet_axis.axis_calc_order[1]]))
 
 
             // asdf
@@ -545,19 +542,18 @@
 
             
 
-            // console.log(interpolate(placeholder_arrays_to_calc_path[0][0][0][0][0].x, placeholder_arrays_to_calc_path[0][1][0][0][0].x, fraction_con_2[closet_axis.axis_calc_order[1]]))
+            // console.log(interpolate(placeholder_arrays_to_calc_path[0][0][0][0][0].x, placeholder_arrays_to_calc_path[0][1][0][0][0].x, fraction_con[closet_axis.axis_calc_order[1]]))
 
 
 
 
             // console.log(placeholder_arrays_to_calc_path[1][0][0][0][0])
-            // console.log(fraction_con_2[closet_axis.axis_calc_order[1]])
-            // console.log(interpolate(placeholder_arrays_to_calc_path[0][0][0][0][0].x, placeholder_arrays_to_calc_path[0][1][0][0][0].x, fraction_con_2[closet_axis.axis_calc_order[1]]))
+            // console.log(fraction_con[closet_axis.axis_calc_order[1]])
+            // console.log(interpolate(placeholder_arrays_to_calc_path[0][0][0][0][0].x, placeholder_arrays_to_calc_path[0][1][0][0][0].x, fraction_con[closet_axis.axis_calc_order[1]]))
             // asdf
 
 
-            text_path_to_draw = placeholder_arrays_to_calc_path[1][0];
-
+            text_path_to_draw = placeholder_arrays_to_calc_path[placeholder_arrays_to_calc_path.length-1][0];
 
 
             // let structure_lower = structuredClone(text_package.text_structure_con[lower.index]);
