@@ -175,10 +175,7 @@
         }
 
 
-
-
-
-        function findClosestPoints_2(text_package, input_variable) {
+        function findClosestPoints(text_package, input_variable) {
 
 
             let number_of_variables = (Object.entries(text_package.text_variables[0]).length);
@@ -198,7 +195,7 @@
             for (let i = 0; i < text_package.text_variables.length; i++) {
                 for(let j = 0; j < number_of_variables; j++){
 
-                    if(Object.entries(input_variable)[j][1] > Object.entries(text_package.text_variables[i])[j][1] 
+                    if(Object.entries(input_variable)[j][1] >= Object.entries(text_package.text_variables[i])[j][1] 
                     && Object.entries(input_variable)[j][1] < Object.entries(text_package.text_variables[i + 1])[j][1]){
 
                         axis_filter[j].push({
@@ -312,13 +309,8 @@
         }
 
 
-
-
-
-        function calc_test(inputVariables){
-
-
-            let variable_max_val_con = [];
+        
+        let variable_max_val_con = [];
 
             for(let i = 0; i < Object.entries(variblefont[0].variables).length; i++){
                 variable_max_val_con[i] = 0;
@@ -331,30 +323,11 @@
                     }
                 }
             }
-            
-            for(let i = 0; i < variable_max_val_con.length; i++){
-                if(inputVariables[Object.keys(inputVariables)[i]] > variable_max_val_con[i]){
-                    inputVariables[Object.keys(inputVariables)[i]] = variable_max_val_con[i];
-                }else if(inputVariables[Object.keys(inputVariables)[i]] < 0){
-                    inputVariables[Object.keys(inputVariables)[i]] = 0;
-                }
-            }
 
 
 
 
-            let closet_axis = findClosestPoints_2(text_package, inputVariables)
 
-
-
-
-            let fraction_con_2 = structuredClone(inputVariables);
-
-            for (let i = 0; i < Object.entries(inputVariables).length; i++){
-                fraction_con_2[Object.keys(fraction_con_2)[i]] = (Object.entries(inputVariables)[i][1] - closet_axis.fraction_properties[i].min) / (closet_axis.fraction_properties[i].max - closet_axis.fraction_properties[i].min);
-            }
-
-            
             
             function get_num_of_array_to_calc_path(num_of_axis) {
                 let result = [];
@@ -371,45 +344,87 @@
                 return num_of_array_to_calc_path.map(size => {
                     let nestedArray = [];
                     for (let i = 0; i < size; i++) {
-                        nestedArray.push(structuredClone(closet_axis.axis[0].path));
+                        nestedArray.push(structuredClone(text_package.text_path_con[0]));
                     }
                     return nestedArray;
                 });
             }
 
 
-            let placeholder_arrays_to_calc_path = make_placeholder_arrays_to_calc_path(num_of_array_to_calc_path)
+        let placeholder_arrays_to_calc_path = make_placeholder_arrays_to_calc_path(num_of_array_to_calc_path);
+
+
+        function calc_test(inputVariables){
+
+
+            // for(let i = 0; i < variable_max_val_con.length; i++){
+            //     if(inputVariables[Object.keys(inputVariables)[i]] > variable_max_val_con[i]){
+            //         inputVariables[Object.keys(inputVariables)[i]] = variable_max_val_con[i];
+            //     }else if(inputVariables[Object.keys(inputVariables)[i]] < 0){
+            //         inputVariables[Object.keys(inputVariables)[i]] = 0;
+            //     }
+            // }
+
+
+            let closet_axis = findClosestPoints(text_package, inputVariables)
+
+            let fraction_con_2 = structuredClone(inputVariables);
+
+            for (let i = 0; i < Object.entries(inputVariables).length; i++){
+                fraction_con_2[Object.keys(fraction_con_2)[i]] = (Object.entries(inputVariables)[i][1] - closet_axis.fraction_properties[i].min) / (closet_axis.fraction_properties[i].max - closet_axis.fraction_properties[i].min);
+            }
+
+
+
+
+
+
+            // first iteration of filtering
+            for(let a = 0; a < placeholder_arrays_to_calc_path[0].length; a++){
+
+                // for(let i = 0; i < closet_axis.groupedaxis.length; i++){
+                    for(let j = 0; j < closet_axis.groupedaxis[a][0].path.length; j++){
+                        for(let k = 0; k < closet_axis.groupedaxis[a][0].path[j].length; k++){
+                            for(let l = 0; l < closet_axis.groupedaxis[a][0].path[j][k].length; l++){
+                                placeholder_arrays_to_calc_path[0][a][j][k][l].x = interpolate(closet_axis.groupedaxis[a][0].path[j][k][l].x, closet_axis.groupedaxis[a][1].path[j][k][l].x, fraction_con_2[closet_axis.axis_calc_order[0]]);
+                                placeholder_arrays_to_calc_path[0][a][j][k][l].y = interpolate(closet_axis.groupedaxis[a][0].path[j][k][l].y, closet_axis.groupedaxis[a][1].path[j][k][l].y, fraction_con_2[closet_axis.axis_calc_order[0]]);
+                                placeholder_arrays_to_calc_path[0][a][j][k][l].in_x = interpolate(closet_axis.groupedaxis[a][0].path[j][k][l].in_x, closet_axis.groupedaxis[a][1].path[j][k][l].in_x, fraction_con_2[closet_axis.axis_calc_order[0]]);
+                                placeholder_arrays_to_calc_path[0][a][j][k][l].in_y = interpolate(closet_axis.groupedaxis[a][0].path[j][k][l].in_y, closet_axis.groupedaxis[a][1].path[j][k][l].in_y, fraction_con_2[closet_axis.axis_calc_order[0]]);
+                                placeholder_arrays_to_calc_path[0][a][j][k][l].out_x = interpolate(closet_axis.groupedaxis[a][0].path[j][k][l].out_x, closet_axis.groupedaxis[a][1].path[j][k][l].out_x, fraction_con_2[closet_axis.axis_calc_order[0]]);
+                                placeholder_arrays_to_calc_path[0][a][j][k][l].out_y = interpolate(closet_axis.groupedaxis[a][0].path[j][k][l].out_y, closet_axis.groupedaxis[a][1].path[j][k][l].out_y, fraction_con_2[closet_axis.axis_calc_order[0]]);
+                            }
+                        }
+                    }
+                // }
+
+            }
+
+
+// console.log(placeholder_arrays_to_calc_path)
+// console.log(closet_axis.groupedaxis)
+
+
+//             // console.log(placeholder_arrays_to_calc_path)
+
+//             console.log(closet_axis.groupedaxis[0][0].path[0][0][0])
+//             console.log(closet_axis.groupedaxis[0][1].path[0][0][0])
+//             console.log(interpolate(closet_axis.groupedaxis[0][0].path[0][0][0].x, closet_axis.groupedaxis[0][1].path[0][0][0].x, fraction_con_2[closet_axis.axis_calc_order[0]]))
+
+
+//             console.log(closet_axis.groupedaxis[1][0].path[0][0][0])
+//             console.log(closet_axis.groupedaxis[1][1].path[0][0][0])
+//             console.log(interpolate(closet_axis.groupedaxis[1][0].path[0][0][0].x, closet_axis.groupedaxis[1][1].path[0][0][0].x, fraction_con_2[closet_axis.axis_calc_order[0]]))
+
+
+//             // console.log(placeholder_arrays_to_calc_path)
+//             console.log(placeholder_arrays_to_calc_path[0][1][0][0][0].x)
+//             console.log(placeholder_arrays_to_calc_path[0][0][0][0][0].x)
             
 
 
 
-                for(let a = 0; a < placeholder_arrays_to_calc_path[0].length; a++){
-
-                    for(let i = 0; i < closet_axis.groupedaxis.length; i++){
-                        for(let j = 0; j < closet_axis.groupedaxis[i].length; j++){
-                            for(let k = 0; k < closet_axis.groupedaxis[i][0].path[j].length; k++){
-                                for(let l = 0; l < closet_axis.groupedaxis[i][0].path[j][k].length; l++){
-                                    placeholder_arrays_to_calc_path[0][a][j][k][l].x = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].x, closet_axis.groupedaxis[i][1].path[j][k][l].x, fraction_con_2[closet_axis.axis_calc_order[0]]);
-                                    placeholder_arrays_to_calc_path[0][a][j][k][l].y = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].y, closet_axis.groupedaxis[i][1].path[j][k][l].y, fraction_con_2[closet_axis.axis_calc_order[0]]);
-                                    placeholder_arrays_to_calc_path[0][a][j][k][l].in_x = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].in_x, closet_axis.groupedaxis[i][1].path[j][k][l].in_x, fraction_con_2[closet_axis.axis_calc_order[0]]);
-                                    placeholder_arrays_to_calc_path[0][a][j][k][l].in_y = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].in_y, closet_axis.groupedaxis[i][1].path[j][k][l].in_y, fraction_con_2[closet_axis.axis_calc_order[0]]);
-                                    placeholder_arrays_to_calc_path[0][a][j][k][l].out_x = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].out_x, closet_axis.groupedaxis[i][1].path[j][k][l].out_x, fraction_con_2[closet_axis.axis_calc_order[0]]);
-                                    placeholder_arrays_to_calc_path[0][a][j][k][l].out_y = interpolate(closet_axis.groupedaxis[i][0].path[j][k][l].out_y, closet_axis.groupedaxis[i][1].path[j][k][l].out_y, fraction_con_2[closet_axis.axis_calc_order[0]]);
-                                }
-                            }
-                        }
-                    }
-
-                }
-
-
-
-
-                
-
             for(let n = 1; n < placeholder_arrays_to_calc_path.length; n++){
                 for(let a = 0; a < placeholder_arrays_to_calc_path[n].length; a = a + 2){
-
                     for(let i = 0; i < placeholder_arrays_to_calc_path[n][a].length; i++){
                         for(let j = 0; j < placeholder_arrays_to_calc_path[n][a][i].length; j++){
                             for(let k = 0; k < placeholder_arrays_to_calc_path[n][a][i][j].length; k++){
@@ -422,46 +437,39 @@
                             }
                         }
                     }
-
-                }
-            }
-            
-
-            
-
-
-
-
-            let text_path_to_draw_1 = structuredClone(closet_axis.axis[0].path);
-
-  
-
-
-            for(let x = 0; x < text_path_to_draw_1.length; x++){
-                for (let i = 0; i < text_path_to_draw_1[x].length; i++) {
-                    for (let j = 0; j < text_path_to_draw_1[x][i].length; j++) {
-                        for (let k = 0; k < text_path_to_draw_1[x][i][j].length; k++) {
-                        
-                            text_path_to_draw_1[x][i][j][k].x = interpolate(lower.path[i][j][k].x, upper.path[i][j][k].x, fraction_con[x]);
-                            text_path_to_draw_1[x][i][j][k].y = interpolate(lower.path[i][j][k].y - variablefont[0].typeface.parameters.ascender, upper.path[i][j][k].y - variablefont[0].typeface.parameters.ascender, fraction_con[x]);
-                            text_path_to_draw_1[x][i][j][k].in_x = interpolate(lower.path[i][j][k].in_x, upper.path[i][j][k].in_x, fraction_con[x]);
-                            text_path_to_draw_1[x][i][j][k].in_y = interpolate(lower.path[i][j][k].in_y - variablefont[0].typeface.parameters.ascender, upper.path[i][j][k].in_y - variablefont[0].typeface.parameters.ascender, fraction_con[x]);
-                            text_path_to_draw_1[x][i][j][k].out_x = interpolate(lower.path[i][j][k].out_x, upper.path[i][j][k].out_x, fraction_con[x]);
-                            text_path_to_draw_1[x][i][j][k].out_y = interpolate(lower.path[i][j][k].out_y - variablefont[0].typeface.parameters.ascender, upper.path[i][j][k].out_y - variablefont[0].typeface.parameters.ascender, fraction_con[x]);
-
-                        }
-                    }
                 }
             }
 
 
-            text_path_to_draw = placeholder_arrays_to_calc_path[1][0]
+            // console.log(placeholder_arrays_to_calc_path)
+            
+            // console.log(interpolate(placeholder_arrays_to_calc_path[0][0][0][0][0].x, placeholder_arrays_to_calc_path[0][1][0][0][0].x, fraction_con_2[closet_axis.axis_calc_order[1]]))
 
 
+            // asdf
 
+
+            // console.log(placeholder_arrays_to_calc_path[0][0][0][0][0].x, placeholder_arrays_to_calc_path[0][1][0][0][0].x)
+            // console.log(closet_axis.axis_calc_order[0])
 
 
             
+
+            // console.log(interpolate(placeholder_arrays_to_calc_path[0][0][0][0][0].x, placeholder_arrays_to_calc_path[0][1][0][0][0].x, fraction_con_2[closet_axis.axis_calc_order[1]]))
+
+
+
+
+            // console.log(placeholder_arrays_to_calc_path[1][0][0][0][0])
+            // console.log(fraction_con_2[closet_axis.axis_calc_order[1]])
+            // console.log(interpolate(placeholder_arrays_to_calc_path[0][0][0][0][0].x, placeholder_arrays_to_calc_path[0][1][0][0][0].x, fraction_con_2[closet_axis.axis_calc_order[1]]))
+            // asdf
+
+
+            text_path_to_draw = placeholder_arrays_to_calc_path[1][0];
+
+
+
             // let structure_lower = structuredClone(text_package.text_structure_con[lower.index]);
             // let structure_upper = structuredClone(text_package.text_structure_con[upper.index]);
             // let structure_path_to_draw = structuredClone(text_package.text_structure_con[lower.index]);
@@ -487,9 +495,9 @@
 
 
             // return { text_path_to_draw, structure_path_to_draw };
-            return { text_path_to_draw };
 
-
+            return { text_path_to_draw }
+            
         }
 
 
@@ -729,7 +737,7 @@
         
 
 
-        let letter_test = new VariableFontOnCanvas(variblefont, assets, 'Ha');
+        let letter_test = new VariableFontOnCanvas(variblefont, assets, 'Hamburg');
 
 
 
@@ -748,7 +756,9 @@
 
             // letter_a_1.draw(0.5);
 
-            letter_test.draw({Weight: 320, Italic: 80})
+            letter_test.draw({Weight: 500, Italic: 100+x})
+
+
 
 
 
