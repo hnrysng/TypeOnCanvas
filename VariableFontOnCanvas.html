@@ -88,7 +88,6 @@
             }
                        
             
-            let number_of_variables = Object.entries(variablefont[0].variables).length;
 
             //  Making infos and variables based on the selected letters
             function text_info(){
@@ -152,9 +151,18 @@
             }
 
 
+
+
+            let number_of_variables = Object.entries(variablefont[0].variables).length;
             let text_package = text_info();
 
-
+            let main_axis_name = find_main_axis(variablefont);
+            let main_axis_index = null;
+            for(let i = 0; i < Object.entries(text_package.text_variables[0]).length; i++){
+                if(Object.entries(text_package.text_variables[0])[i][0] == main_axis_name){
+                    main_axis_index = i;   
+                }
+            }
 
 
             let updated_width_con = [];
@@ -170,15 +178,74 @@
             let pos_y_align = [];
 
 
+
+
+
+            function find_main_axis(variablefont){
+
+
+                let variables = [];
+
+                for(let i = 0; i < variablefont.length; i++){
+                    variables[i] = variablefont[i].variables
+                }
+
+                // Function to count unique values for each property
+                function countUniqueValues(arr) {
+                    const uniqueCounts = {};
+                    
+                    arr.forEach(obj => {
+                        Object.keys(obj).forEach(key => {
+                        if (!uniqueCounts[key]) {
+                            uniqueCounts[key] = new Set();
+                        }
+                        uniqueCounts[key].add(obj[key]);
+                        });
+                    });
+                    
+                    // Convert sets to counts
+                    for (const key in uniqueCounts) {
+                        uniqueCounts[key] = uniqueCounts[key].size;
+                    }
+
+                    return uniqueCounts;
+                }
+
+                // Function to find the property with the most diverse values
+                function findMostDiverseProperty(arr) {
+                const uniqueCounts = countUniqueValues(arr);
+                
+                // Find the property with the highest count of unique values
+                let mostDiverseProperty = null;
+                let maxUniqueCount = 0;
+                
+                for (const key in uniqueCounts) {
+                        if (uniqueCounts[key] > maxUniqueCount) {
+                            maxUniqueCount = uniqueCounts[key];
+                            mostDiverseProperty = key;
+                        }
+                    }
+
+                    return mostDiverseProperty;
+                }
+
+                const mostDiverseProperty = findMostDiverseProperty(variables);
+
+                return mostDiverseProperty;
+
+            }
+
         function interpolate(value1, value2, fraction) {
             return value1 + (value2 - value1) * fraction;
         }
 
 
+
+
+
         function findClosestPoints(text_package, input_variable) {
 
 
-            let number_of_variables = (Object.entries(text_package.text_variables[0]).length);
 
             let axis_filter = [];
             let fraction_properties = [];
@@ -192,11 +259,27 @@
             }
             
 
+
+
             for (let i = 0; i < text_package.text_variables.length; i++) {
                 for(let j = 0; j < number_of_variables; j++){
 
-                    if(Object.entries(input_variable)[j][1] >= Object.entries(text_package.text_variables[i])[j][1] 
-                    && Object.entries(input_variable)[j][1] < Object.entries(text_package.text_variables[i + 1])[j][1]){
+                    
+
+                    if(input_variable[Object.entries(text_package.text_variables[0])[j][0]] == Object.entries(text_package.text_variables[i])[j][1] && text_package.text_variables[i - 1] == true){
+                            axis_filter[j].push({
+                                index: i - 1,
+                                variable: text_package.text_variables[i - 1],
+                                path: text_package.text_path_con[i - 1],
+                            })
+                            axis_filter[j].push({
+                                index: i,
+                                variable: text_package.text_variables[i],
+                                path: text_package.text_path_con[i],
+                            })
+                    }
+                    else if(input_variable[Object.entries(text_package.text_variables[0])[j][0]] >= Object.entries(text_package.text_variables[i])[j][1] 
+                    && input_variable[Object.entries(text_package.text_variables[0])[j][0]] < Object.entries(text_package.text_variables[i + 1])[j][1]){
 
                         axis_filter[j].push({
                             index: i,
@@ -213,9 +296,10 @@
 
                     }
 
+                    
+
                 }
             }
-
 
 
             for(let i = 0; i < number_of_variables; i++){
@@ -223,18 +307,22 @@
             }
 
 
-            let mainIndex = element_length_finder.reduce((maxIndex, currentValue, currentIndex, arr) => {
-                return currentValue > arr[maxIndex] ? currentIndex : maxIndex;
-            }, 0);
+            // let mainIndex = element_length_finder.reduce((maxIndex, currentValue, currentIndex, arr) => {
+            //     return currentValue > arr[maxIndex] ? currentIndex : maxIndex;
+            // }, 0);
 
 
-            let axis = axis_filter[mainIndex];
+            // let axis = axis_filter[mainIndex];
+
+
+            let axis = axis_filter[main_axis_index];
 
 
 
-            for(let i = 0; i < axis_filter[mainIndex].length; i++){
+
+            for(let i = 0; i < axis_filter[main_axis_index].length; i++){
                 for(let j = 0; j < number_of_variables; j++){
-                    axis_val[j].push(Object.entries(axis_filter[mainIndex][i].variable)[j][1])
+                    axis_val[j].push(Object.entries(axis_filter[main_axis_index][i].variable)[j][1])
                 }
             }
             
@@ -290,10 +378,7 @@
             }
 
 
-
             let groupedaxis = groupByKeysToArray(axis, [filter]);
-
-
 
             
             let axis_calc_order = [];
@@ -311,9 +396,11 @@
 
         
         let variable_max_val_con = [];
+        let variable_min_val_con = [];
 
             for(let i = 0; i < Object.entries(variblefont[0].variables).length; i++){
                 variable_max_val_con[i] = 0;
+                variable_min_val_con[i] = 0;
             }
 
             for(let i = 0; i < variablefont.length; i++){
@@ -321,11 +408,11 @@
                     if(Object.entries(variblefont[i].variables)[j][1] > variable_max_val_con[j]){
                         variable_max_val_con[j] = Object.entries(variblefont[i].variables)[j][1]
                     }
+                    if(Object.entries(variblefont[i].variables)[j][1] < variable_min_val_con[j]){
+                        variable_min_val_con[j] = Object.entries(variblefont[i].variables)[j][1]
+                    }
                 }
             }
-
-
-
 
 
             
@@ -357,13 +444,15 @@
         function calc_test(inputVariables){
 
 
-            // for(let i = 0; i < variable_max_val_con.length; i++){
-            //     if(inputVariables[Object.keys(inputVariables)[i]] > variable_max_val_con[i]){
-            //         inputVariables[Object.keys(inputVariables)[i]] = variable_max_val_con[i];
-            //     }else if(inputVariables[Object.keys(inputVariables)[i]] < 0){
-            //         inputVariables[Object.keys(inputVariables)[i]] = 0;
-            //     }
-            // }
+            for(let i = 0; i < variable_max_val_con.length; i++){
+                if(inputVariables[Object.keys(inputVariables)[i]] > variable_max_val_con[i]){
+                    inputVariables[Object.keys(inputVariables)[i]] = variable_max_val_con[i];
+                }
+
+                if(inputVariables[Object.keys(inputVariables)[i]] < variable_min_val_con[i]){
+                    inputVariables[Object.keys(inputVariables)[i]] = variable_min_val_con[i];
+                }
+            }
 
 
             let closet_axis = findClosestPoints(text_package, inputVariables)
@@ -376,8 +465,9 @@
 
 
 
+//             console.log(closet_axis)
 
-
+// console.log(closet_axis.groupedaxis)
 
             // first iteration of filtering
             for(let a = 0; a < placeholder_arrays_to_calc_path[0].length; a++){
@@ -756,7 +846,7 @@
 
             // letter_a_1.draw(0.5);
 
-            letter_test.draw({Weight: 500, Italic: 100+x})
+            letter_test.draw({Weight: 100-x, Italic: 100-x})
 
 
 
