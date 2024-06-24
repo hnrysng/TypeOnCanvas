@@ -157,12 +157,103 @@
             let text_package = text_info();
 
             let main_axis_name = find_main_axis(variablefont);
-            let main_axis_index = null;
-            for(let i = 0; i < Object.entries(text_package.text_variables[0]).length; i++){
-                if(Object.entries(text_package.text_variables[0])[i][0] == main_axis_name){
-                    main_axis_index = i;   
+
+
+
+            function main_axis(){
+
+                let main_axis = {
+                    name: null,
+                    index: null,
+                    value: {min: null, max: null}
                 }
+
+
+                main_axis.name = find_main_axis_name(variablefont);
+
+                
+                for(let i = 0; i < Object.entries(text_package.text_variables[0]).length; i++){
+                    if(Object.entries(text_package.text_variables[0])[i][0] == main_axis.name){
+                        main_axis.index = i;   
+                    }
+                }
+
+
+
+                let min_max_finder = [];
+
+                for(let i = 0; i < text_package.text_variables.length; i++){
+                    min_max_finder.push(text_package.text_variables[i][main_axis_name])
+                }
+
+                main_axis.value.min = Math.min(...min_max_finder);
+                main_axis.value.max = Math.max(...min_max_finder);
+
+
+
+                function find_main_axis_name(variablefont){
+
+
+                    let variables = [];
+
+                    for(let i = 0; i < variablefont.length; i++){
+                        variables[i] = variablefont[i].variables
+                    }
+
+                    // Function to count unique values for each property
+                    function countUniqueValues(arr) {
+                        const uniqueCounts = {};
+                        
+                        arr.forEach(obj => {
+                            Object.keys(obj).forEach(key => {
+                            if (!uniqueCounts[key]) {
+                                uniqueCounts[key] = new Set();
+                            }
+                            uniqueCounts[key].add(obj[key]);
+                            });
+                        });
+                        
+                        // Convert sets to counts
+                        for (const key in uniqueCounts) {
+                            uniqueCounts[key] = uniqueCounts[key].size;
+                        }
+
+                        return uniqueCounts;
+                    }
+
+                    // Function to find the property with the most diverse values
+                    function findMostDiverseProperty(arr) {
+                    const uniqueCounts = countUniqueValues(arr);
+                    
+                    // Find the property with the highest count of unique values
+                    let mostDiverseProperty = null;
+                    let maxUniqueCount = 0;
+                    
+                    for (const key in uniqueCounts) {
+                            if (uniqueCounts[key] > maxUniqueCount) {
+                                maxUniqueCount = uniqueCounts[key];
+                                mostDiverseProperty = key;
+                            }
+                        }
+
+                        return mostDiverseProperty;
+                    }
+
+                    const mostDiverseProperty = findMostDiverseProperty(variables);
+
+                    return mostDiverseProperty;
+
+                }
+
+                return main_axis;
+
             }
+
+
+            let main_axis_info = main_axis();
+
+
+            
 
 
             let updated_width_con = [];
@@ -236,8 +327,8 @@
             }
 
             function interpolate(value1, value2, fraction) {
-            return value1 + (value2 - value1) * fraction;
-        }
+                return value1 + (value2 - value1) * fraction;
+            }
 
             function findClosestPoints(text_package, input_variable) {
 
@@ -256,29 +347,41 @@
             
 
 
-
             for (let i = 0; i < text_package.text_variables.length; i++) {
-                for(let j = 0; j < number_of_variables; j++){
 
-
-                    if(input_variable[Object.entries(text_package.text_variables[0])[j][0]] == Object.entries(text_package.text_variables[i])[j][1] && text_package.text_variables[i - 1] == true){
-                            axis_filter[j].push({
+                    if(input_variable[main_axis_name] == Object.entries(text_package.text_variables[i])[main_axis_info.index][1] 
+                    && input_variable[main_axis_name] == main_axis_info.value.min){
+                            axis_filter[main_axis_info.index].push({
+                                index: i,
+                                variable: text_package.text_variables[i],
+                                path: text_package.text_path_con[i],
+                                structure: text_package.text_structure_con[i]
+                            })
+                            axis_filter[main_axis_info.index].push({
+                                index: i + 1,
+                                variable: text_package.text_variables[i + 1],
+                                path: text_package.text_path_con[i + 1],
+                                structure: text_package.text_structure_con[i + 1]
+                            })
+                    }else if(input_variable[main_axis_name] == Object.entries(text_package.text_variables[i])[main_axis_info.index][1] 
+                    && input_variable[main_axis_name] == main_axis_info.value.max){
+                            axis_filter[main_axis_info.index].push({
                                 index: i - 1,
                                 variable: text_package.text_variables[i - 1],
                                 path: text_package.text_path_con[i - 1],
                                 structure: text_package.text_structure_con[i - 1]
                             })
-                            axis_filter[j].push({
+                            axis_filter[main_axis_info.index].push({
                                 index: i,
                                 variable: text_package.text_variables[i],
                                 path: text_package.text_path_con[i],
                                 structure: text_package.text_structure_con[i]
                             })
                     }
-                    else if(input_variable[Object.entries(text_package.text_variables[0])[j][0]] >= Object.entries(text_package.text_variables[i])[j][1] 
-                    && input_variable[Object.entries(text_package.text_variables[0])[j][0]] < Object.entries(text_package.text_variables[i + 1])[j][1]){
+                    else if(input_variable[main_axis_name] >= Object.entries(text_package.text_variables[i])[main_axis_info.index][1] 
+                    && input_variable[Object.entries(text_package.text_variables[0])[main_axis_info.index][0]] < Object.entries(text_package.text_variables[i + 1])[main_axis_info.index][1]){
 
-                        axis_filter[j].push({
+                        axis_filter[main_axis_info.index].push({
                             index: i,
                             variable: text_package.text_variables[i],
                             path: text_package.text_path_con[i],
@@ -286,7 +389,7 @@
                         })
 
 
-                        axis_filter[j].push({
+                        axis_filter[main_axis_info.index].push({
                             index: i + 1,
                             variable: text_package.text_variables[i + 1],
                             path: text_package.text_path_con[i + 1],
@@ -295,10 +398,9 @@
 
                     }
 
-                    
-
-                }
             }
+
+
 
 
             for(let i = 0; i < number_of_variables; i++){
@@ -306,22 +408,15 @@
             }
 
 
-            // let mainIndex = element_length_finder.reduce((maxIndex, currentValue, currentIndex, arr) => {
-            //     return currentValue > arr[maxIndex] ? currentIndex : maxIndex;
-            // }, 0);
+//only make it with main_axis_index, and use min_val and max_val to filter out the arrs.
+            let axis = axis_filter[main_axis_info.index];
+            
+            // console.log(axis)
 
 
-            // let axis = axis_filter[mainIndex];
-
-
-            let axis = axis_filter[main_axis_index];
-
-
-
-
-            for(let i = 0; i < axis_filter[main_axis_index].length; i++){
+            for(let i = 0; i < axis_filter[main_axis_info.index].length; i++){
                 for(let j = 0; j < number_of_variables; j++){
-                    axis_val[j].push(Object.entries(axis_filter[main_axis_index][i].variable)[j][1])
+                    axis_val[j].push(Object.entries(axis_filter[main_axis_info.index][i].variable)[j][1])
                 }
             }
             
@@ -370,6 +465,11 @@
 
 
 
+
+
+
+
+
             let filter = [];
 
             for(let i = 0; i < number_of_variables - 1; i++){
@@ -379,7 +479,12 @@
 
             let groupedaxis = groupByKeysToArray(axis, [filter]);
 
+            // let groupedaxis_1 = groupByKeysToArray_1(axis, [filter]);
             
+            // console.log(axis)
+            // console.log(groupedaxis)
+
+            // asdf
             let axis_calc_order = [];
 
             for(let i = number_of_variables - 1; i >= 0; i--){
@@ -810,11 +915,9 @@
             ctx.fill();
             ctx.closePath();
 
-            // letter_a_1.draw(0.5);
+            
 
-            letter_test.draw({Weight: 100, Italic: 100})
-
-
+            letter_test.draw({Weight: 700-x, Italic: 100-x})
 
 
 
