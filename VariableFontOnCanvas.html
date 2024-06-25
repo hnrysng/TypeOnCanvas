@@ -86,7 +86,7 @@
                     assets[prop] = defaults[prop];
                 }
             }
-                       
+
             
 
             //  Making infos and variables based on the selected letters
@@ -156,11 +156,11 @@
             let number_of_variables = Object.entries(variablefont[0].variables).length;
             let text_package = text_info();
 
-            let main_axis_name = find_main_axis(variablefont);
 
 
 
-            function main_axis(){
+
+            function find_main_axis(){
 
                 let main_axis = {
                     name: null,
@@ -183,7 +183,7 @@
                 let min_max_finder = [];
 
                 for(let i = 0; i < text_package.text_variables.length; i++){
-                    min_max_finder.push(text_package.text_variables[i][main_axis_name])
+                    min_max_finder.push(text_package.text_variables[i][main_axis.name])
                 }
 
                 main_axis.value.min = Math.min(...min_max_finder);
@@ -250,7 +250,7 @@
             }
 
 
-            let main_axis_info = main_axis();
+            let main_axis = find_main_axis();
 
 
             
@@ -268,63 +268,6 @@
             let width_con = [];
             let pos_y_align = [];
 
-
-
-
-
-            function find_main_axis(variablefont){
-
-
-                let variables = [];
-
-                for(let i = 0; i < variablefont.length; i++){
-                    variables[i] = variablefont[i].variables
-                }
-
-                // Function to count unique values for each property
-                function countUniqueValues(arr) {
-                    const uniqueCounts = {};
-                    
-                    arr.forEach(obj => {
-                        Object.keys(obj).forEach(key => {
-                        if (!uniqueCounts[key]) {
-                            uniqueCounts[key] = new Set();
-                        }
-                        uniqueCounts[key].add(obj[key]);
-                        });
-                    });
-                    
-                    // Convert sets to counts
-                    for (const key in uniqueCounts) {
-                        uniqueCounts[key] = uniqueCounts[key].size;
-                    }
-
-                    return uniqueCounts;
-                }
-
-                // Function to find the property with the most diverse values
-                function findMostDiverseProperty(arr) {
-                const uniqueCounts = countUniqueValues(arr);
-                
-                // Find the property with the highest count of unique values
-                let mostDiverseProperty = null;
-                let maxUniqueCount = 0;
-                
-                for (const key in uniqueCounts) {
-                        if (uniqueCounts[key] > maxUniqueCount) {
-                            maxUniqueCount = uniqueCounts[key];
-                            mostDiverseProperty = key;
-                        }
-                    }
-
-                    return mostDiverseProperty;
-                }
-
-                const mostDiverseProperty = findMostDiverseProperty(variables);
-
-                return mostDiverseProperty;
-
-            }
 
             function interpolate(value1, value2, fraction) {
                 return value1 + (value2 - value1) * fraction;
@@ -349,39 +292,39 @@
 
             for (let i = 0; i < text_package.text_variables.length; i++) {
 
-                    if(input_variable[main_axis_name] == Object.entries(text_package.text_variables[i])[main_axis_info.index][1] 
-                    && input_variable[main_axis_name] == main_axis_info.value.min){
-                            axis_filter[main_axis_info.index].push({
+                    if(input_variable[main_axis.name] == Object.entries(text_package.text_variables[i])[main_axis.index][1] 
+                    && input_variable[main_axis.name] == main_axis.value.min){
+                            axis_filter[main_axis.index].push({
                                 index: i,
                                 variable: text_package.text_variables[i],
                                 path: text_package.text_path_con[i],
                                 structure: text_package.text_structure_con[i]
                             })
-                            axis_filter[main_axis_info.index].push({
+                            axis_filter[main_axis.index].push({
                                 index: i + 1,
                                 variable: text_package.text_variables[i + 1],
                                 path: text_package.text_path_con[i + 1],
                                 structure: text_package.text_structure_con[i + 1]
                             })
-                    }else if(input_variable[main_axis_name] == Object.entries(text_package.text_variables[i])[main_axis_info.index][1] 
-                    && input_variable[main_axis_name] == main_axis_info.value.max){
-                            axis_filter[main_axis_info.index].push({
+                    }else if(input_variable[main_axis.name] == Object.entries(text_package.text_variables[i])[main_axis.index][1] 
+                    && input_variable[main_axis.name] == main_axis.value.max){
+                            axis_filter[main_axis.index].push({
                                 index: i - 1,
                                 variable: text_package.text_variables[i - 1],
                                 path: text_package.text_path_con[i - 1],
                                 structure: text_package.text_structure_con[i - 1]
                             })
-                            axis_filter[main_axis_info.index].push({
+                            axis_filter[main_axis.index].push({
                                 index: i,
                                 variable: text_package.text_variables[i],
                                 path: text_package.text_path_con[i],
                                 structure: text_package.text_structure_con[i]
                             })
                     }
-                    else if(input_variable[main_axis_name] >= Object.entries(text_package.text_variables[i])[main_axis_info.index][1] 
-                    && input_variable[Object.entries(text_package.text_variables[0])[main_axis_info.index][0]] < Object.entries(text_package.text_variables[i + 1])[main_axis_info.index][1]){
+                    else if(input_variable[main_axis.name] >= Object.entries(text_package.text_variables[i])[main_axis.index][1] 
+                    && input_variable[Object.entries(text_package.text_variables[0])[main_axis.index][0]] < Object.entries(text_package.text_variables[i + 1])[main_axis.index][1]){
 
-                        axis_filter[main_axis_info.index].push({
+                        axis_filter[main_axis.index].push({
                             index: i,
                             variable: text_package.text_variables[i],
                             path: text_package.text_path_con[i],
@@ -389,7 +332,7 @@
                         })
 
 
-                        axis_filter[main_axis_info.index].push({
+                        axis_filter[main_axis.index].push({
                             index: i + 1,
                             variable: text_package.text_variables[i + 1],
                             path: text_package.text_path_con[i + 1],
@@ -408,15 +351,15 @@
             }
 
 
-//only make it with main_axis_index, and use min_val and max_val to filter out the arrs.
-            let axis = axis_filter[main_axis_info.index];
+            //only make it with main_axis_index, and use min_val and max_val to filter out the arrs.
+            let axis = axis_filter[main_axis.index];
             
             // console.log(axis)
 
 
-            for(let i = 0; i < axis_filter[main_axis_info.index].length; i++){
+            for(let i = 0; i < axis_filter[main_axis.index].length; i++){
                 for(let j = 0; j < number_of_variables; j++){
-                    axis_val[j].push(Object.entries(axis_filter[main_axis_info.index][i].variable)[j][1])
+                    axis_val[j].push(Object.entries(axis_filter[main_axis.index][i].variable)[j][1])
                 }
             }
             
@@ -701,6 +644,7 @@
                 let text_path_to_draw = calc_test(variables).text_path_to_draw;
                 let structure_path_to_draw = calc_test(variables).structure_path_to_draw;
                     
+                
 
 
                 ctx.beginPath();
@@ -709,27 +653,27 @@
                     for (let j = 0; j < text_path_to_draw[i].length; j++) {
                         ctx.moveTo(
                             (text_path_to_draw[i][j][0].x * assets.scale) + updated_width_con[i] + text_alignment, 
-                           -(text_path_to_draw[i][j][0].y * assets.scale) + assets.position.y + pos_y_align[i]
+                           ((-text_path_to_draw[i][j][0].y + variablefont[0].typeface.parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i]
                         );
 
                         for (let k = 0; k < text_path_to_draw[i][j].length - 1; k++) {
                             ctx.bezierCurveTo(
                                 (text_path_to_draw[i][j][k].out_x * assets.scale) + updated_width_con[i] + text_alignment, 
-                               -(text_path_to_draw[i][j][k].out_y * assets.scale) + assets.position.y + pos_y_align[i], 
+                               ((-text_path_to_draw[i][j][k].out_y + variablefont[0].typeface.parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i], 
                                 (text_path_to_draw[i][j][k + 1].in_x * assets.scale) + updated_width_con[i] + text_alignment, 
-                               -(text_path_to_draw[i][j][k + 1].in_y * assets.scale) + assets.position.y + pos_y_align[i], 
+                               ((-text_path_to_draw[i][j][k + 1].in_y + variablefont[0].typeface.parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i], 
                                 (text_path_to_draw[i][j][k + 1].x * assets.scale) + updated_width_con[i] + text_alignment, 
-                               -(text_path_to_draw[i][j][k + 1].y * assets.scale) + assets.position.y + pos_y_align[i]
+                               ((-text_path_to_draw[i][j][k + 1].y + variablefont[0].typeface.parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i]
                             );
                         }
 
                         ctx.bezierCurveTo(
                             (text_path_to_draw[i][j][text_path_to_draw[i][j].length - 1].out_x * assets.scale) + updated_width_con[i] + text_alignment, 
-                           -(text_path_to_draw[i][j][text_path_to_draw[i][j].length - 1].out_y * assets.scale) + assets.position.y + pos_y_align[i],
+                           ((-text_path_to_draw[i][j][text_path_to_draw[i][j].length - 1].out_y + variablefont[0].typeface.parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i],
                             (text_path_to_draw[i][j][0].in_x * assets.scale) + updated_width_con[i] + text_alignment, 
-                           -(text_path_to_draw[i][j][0].in_y * assets.scale) + assets.position.y + pos_y_align[i],
+                           ((-text_path_to_draw[i][j][0].in_y + variablefont[0].typeface.parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i],
                             (text_path_to_draw[i][j][0].x * assets.scale) + updated_width_con[i] + text_alignment, 
-                           -(text_path_to_draw[i][j][0].y * assets.scale) + assets.position.y + pos_y_align[i]
+                           ((-text_path_to_draw[i][j][0].y + variablefont[0].typeface.parameters.ascender) * assets.scale) + assets.position.y + pos_y_align[i]
                         );
                     }
 
@@ -921,6 +865,11 @@
             letter_test.draw({Weight: 700-x, Italic: 100-x})
 
 
+            ctx.beginPath();
+            ctx.rect(100, 500, 10, 10);
+            ctx.fillStyle = "#ff0000";
+            ctx.fill();
+            ctx.closePath();
 
             window.requestAnimationFrame(anim);
 
