@@ -1,0 +1,130 @@
+<html>
+  <head>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        /* background-color: antiquewhite; */
+        background-color: #222222;
+        color: white;
+        display: flex;
+        justify-content: center;
+      }
+
+      canvas {
+        /* display: block; */
+        margin: auto;
+        width: 500px;
+      }
+
+    </style>
+  </head>
+
+  <body>
+
+    <div id="container"></div>
+
+    <canvas id="canvas" width="1000" height="1000"></canvas>    
+    
+    <script src="../assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 15 XXThin_data.js"></script>
+    <script src="../assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 16 XXThin Italic_data.js"></script>
+    <script src="../assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 25 XThin_data.js"></script>
+    <script src="../assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 26 XThin Italic_data.js"></script>
+    <script src="../assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 35 Thin_data.js"></script>
+    <script src="../assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 36 Thin Italic_data.js"></script>
+    <script src="../assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 45 Light_data.js"></script>
+    <script src="../assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 46 Light Italic_data.js"></script>
+    <script src="../assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 55 Roman_data.js"></script>
+    <script src="../assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 56 Roman Italic_data.js"></script>
+    <script src="../assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 65 Medium_data.js"></script>
+    <script src="../assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 66 Medium Italic_data.js"></script>
+    <script src="../assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 75 Bold_data.js"></script>
+    <script src="../assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 76 Bold Italic_data.js"></script>
+    <script src="../assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 95 Black_data.js"></script>
+    <script src="../assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 96 Black Italic_data.js"></script>
+    
+
+    <script src="SingleFontOnCanvas.js"></script>
+
+    <script>
+
+
+        let canvas = document.getElementById('canvas');
+        let ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = true;
+        ctx.webkitImageSmoothingEnabled = true;
+        ctx.mozImageSmoothingEnabled = true;
+        ctx.msImageSmoothingEnabled = true;
+        ctx.oImageSmoothingEnabled = true;
+
+
+
+
+
+        
+
+
+
+        let assets = {
+                    position: {x: 100, y:100},
+                    weight: 1,
+                    scale: 0.1,
+                    alignment: 'left',
+                    italic: false,
+                    sticky: undefined,
+                    color: undefined,
+                    line_height: undefined,
+                    tracking: undefined,
+                    kerning: undefined,
+                    stroke_width: 1,
+                    stroke_style: undefined,
+                    structure_width: 1,
+                    structure_style: undefined,
+        }
+
+
+
+
+
+
+        let letter_a_1 = new SingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'Hamburgefonstiv', assets);
+
+
+
+
+        
+
+
+        function anim() {
+
+
+            ctx.beginPath();
+            ctx.rect(0, 0, 1000, 1000);
+            ctx.fillStyle = "#000000";
+            ctx.fill();
+            ctx.closePath();
+
+            letter_a_1.draw();
+
+            ctx.beginPath();
+            ctx.rect(100, 100, 10, 10);
+            ctx.fillStyle = "#ff0000";
+            ctx.fill();
+            ctx.closePath();
+
+
+            window.requestAnimationFrame(anim);
+
+
+        }
+
+        anim();
+
+
+
+
+
+    </script>
+  </body>
+</html>
