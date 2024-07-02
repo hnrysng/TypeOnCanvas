@@ -51,8 +51,8 @@ function SingleFontOnCanvas(typeface, letter, assets){
     }
 
     for(let i = 0; i < letter.length; i++){
-            typeface_path_con[i] = typeface.letters.path[index_con[i]];
-            typeface_info_con[i] = typeface.letters.info[index_con[i]];
+            typeface_path_con[i] = structuredClone(typeface.letters.path[index_con[i]]);
+            typeface_info_con[i] = structuredClone(typeface.letters.info[index_con[i]]);
     }
 
 
